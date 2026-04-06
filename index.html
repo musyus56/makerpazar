@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kurumsal İç Sistem | Operasyon Paneli</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (ücretsiz ikonlar) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f6fa;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Üst Bar - Sadeleştirilmiş */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: #0a66c2;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #0a66c2, #004182);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #eef2ff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        /* Ana içerik */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        /* Grid sistem - 3 kart */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            transition: all 0.25s ease;
+            border: 1px solid #eef2f6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e1;
+        }
+
+        /* Renkli üst çizgi */
+        .card-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+
+        .icon-bg {
+            width: 60px;
+            height: 60px;
+            background: #f1f5f9;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.3rem;
+            font-size: 2rem;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .module-desc {
+            color: #475569;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            margin-bottom: 1.5rem;
+        }
+
+        .link-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #0a66c2;
+            margin-top: auto;
+        }
+
+        .link-hint i {
+            transition: transform 0.2s;
+        }
+
+        .module-card:hover .link-hint i {
+            transform: translateX(5px);
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            padding: 1.2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 0.8rem 1.2rem;
+            }
+            .container {
+                padding: 0 1rem;
+                margin: 1.5rem auto;
+            }
+            .module-title {
+                font-size: 1.3rem;
+            }
+            .icon-bg {
+                width: 50px;
+                height: 50px;
+                font-size: 1.7rem;
+            }
+        }
+
+        /* Bilgi notu - daha sade */
+        .info-note {
+            background: #f0f9ff;
+            border-radius: 16px;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.75rem;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            border: 1px solid #b9e2fa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo-area">
+        <div class="logo-icon">
+            <i class="fas fa-chalkboard-user"></i>
+        </div>
+        <div class="logo-text">Operasyon Portalı</div>
+        <div class="badge">Aktif Bağlantılar</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="modules-grid">
+        <!-- 1. Mağaza Teslim / Stok Kartı -->
+        <a href="https://musyus56.github.io/maker-stok-ki-i/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #2b6e3c;"></div>
+            <div class="icon-bg" style="color: #2b6e3c; background:#e8f3e9;">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="module-title">Mağaza Teslim & Stok</div>
+            <div class="module-desc">
+                Stok bildirim sistemi. Stokta olmayan ürünler için müşteri bilgilerini kaydedin, ürün geldiğinde kolayca ulaşın.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- 2. Barkod İstek Listesi -->
+        <a href="https://musyus56.github.io/makerbarkod/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #1e6f9f;"></div>
+            <div class="icon-bg" style="color: #1e6f9f; background:#e6f2f9;">
+                <i class="fas fa-barcode"></i>
+            </div>
+            <div class="module-title">Barkod İstek Listesi</div>
+            <div class="module-desc">
+                Barkod talepleri, etiket basımı ve envanter listesi yönetimi için ilgili modüle erişin.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- 3. Arızalı Ürünler / Teknik Destek -->
+        <a href="https://musyus56.github.io/maker-teknik-destek/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #b91c1c;"></div>
+            <div class="icon-bg" style="color: #b91c1c; background:#fee9e9;">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <div class="module-title">Arızalı Ürünler & Teknik Destek</div>
+            <div class="module-desc">
+                Arızalı ürün kayıtları, teknik servis talepleri ve takip süreçlerini yönetin.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+    </div>
+
+    <div class="info-note">
+        <i class="fas fa-shield-alt"></i>
+        <span>Tüm modüller şirket içi kullanım için yetkilendirilmiştir. Kartlara tıklayarak ilgili sisteme yönlendirilirsiniz.</span>
+    </div>
+</div>
+
+<div class="footer">
+    © 2025 — Kurumsal İç Yönlendirme Sistemi | Operasyonel modüller aktif
+</div>
+
+<script>
+    // Konsolda link kontrolü
+    console.log("✅ Yönlendirme paneline hoş geldiniz!");
+    console.log("Mağaza/Stok: https://musyus56.github.io/maker-stok-ki-i/");
+    console.log("Barkod Modülü: https://musyus56.github.io/makerbarkod/");
+    console.log("Teknik Destek: https://musyus56.github.io/maker-teknik-destek/");
+</script>
+</body>
+</html>
