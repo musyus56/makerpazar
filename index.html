@@ -6,7 +6,7 @@
     <title>Kurumsal İç Sistem | Operasyon Paneli</title>
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (ücretsiz ikonlar) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -24,7 +24,7 @@
             flex-direction: column;
         }
 
-        /* Üst Bar - Sadeleştirilmiş */
+        /* Üst Bar */
         .navbar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
@@ -79,24 +79,24 @@
 
         /* Ana içerik */
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 2rem auto;
             padding: 0 1.5rem;
             flex: 1;
         }
 
-        /* Grid sistem - 3 kart */
+        /* Grid sistem - 4 kart */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.8rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .module-card {
             background: white;
             border-radius: 20px;
-            padding: 1.8rem;
+            padding: 1.6rem;
             transition: all 0.25s ease;
             border: 1px solid #eef2f6;
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
@@ -125,35 +125,35 @@
         }
 
         .icon-bg {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             background: #f1f5f9;
-            border-radius: 18px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.3rem;
-            font-size: 2rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.8rem;
         }
 
         .module-title {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
         }
 
         .module-desc {
             color: #475569;
-            font-size: 0.85rem;
-            line-height: 1.45;
-            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 1.2rem;
         }
 
         .link-hint {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #0a66c2;
             margin-top: auto;
@@ -164,18 +164,18 @@
         }
 
         .module-card:hover .link-hint i {
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
         /* Footer */
         .footer {
             border-top: 1px solid #e2e8f0;
             background: white;
-            padding: 1.2rem;
+            padding: 1rem;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #64748b;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         /* Responsive */
@@ -188,27 +188,8 @@
                 margin: 1.5rem auto;
             }
             .module-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
-            .icon-bg {
-                width: 50px;
-                height: 50px;
-                font-size: 1.7rem;
-            }
-        }
-
-        /* Bilgi notu - daha sade */
-        .info-note {
-            background: #f0f9ff;
-            border-radius: 16px;
-            padding: 0.8rem 1.2rem;
-            font-size: 0.75rem;
-            color: #0369a1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            border: 1px solid #b9e2fa;
         }
     </style>
 </head>
@@ -220,19 +201,20 @@
             <i class="fas fa-chalkboard-user"></i>
         </div>
         <div class="logo-text">Operasyon Portalı</div>
-        <div class="badge">Aktif Bağlantılar</div>
+        <div class="badge">4 Modül Aktif</div>
     </div>
 </div>
 
 <div class="container">
     <div class="modules-grid">
-        <!-- 1. Mağaza Teslim / Stok Kartı -->
+        
+        <!-- 1. Mağaza Teslim & Stok -->
         <a href="https://musyus56.github.io/maker-stok-ki-i/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #2b6e3c;"></div>
             <div class="icon-bg" style="color: #2b6e3c; background:#e8f3e9;">
                 <i class="fas fa-boxes"></i>
             </div>
-            <div class="module-title">Stok Bilgilendirme</div>
+            <div class="module-title">Mağaza Teslim & Stok</div>
             <div class="module-desc">
                 Stok bildirim sistemi. Stokta olmayan ürünler için müşteri bilgilerini kaydedin, ürün geldiğinde kolayca ulaşın.
             </div>
@@ -248,7 +230,7 @@
             <div class="icon-bg" style="color: #1e6f9f; background:#e6f2f9;">
                 <i class="fas fa-barcode"></i>
             </div>
-            <div class="module-title">Mağza Teslim Barkod</div>
+            <div class="module-title">Barkod İstek Listesi</div>
             <div class="module-desc">
                 Barkod talepleri, etiket basımı ve envanter listesi yönetimi için ilgili modüle erişin.
             </div>
@@ -258,7 +240,7 @@
             </div>
         </a>
 
-        <!-- 3. Arızalı Ürünler / Teknik Destek -->
+        <!-- 3. Arızalı Ürünler & Teknik Destek -->
         <a href="https://musyus56.github.io/maker-teknik-destek/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #b91c1c;"></div>
             <div class="icon-bg" style="color: #b91c1c; background:#fee9e9;">
@@ -273,24 +255,35 @@
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
-    </div>
 
-    <div class="info-note">
-        <i class="fas fa-shield-alt"></i>
-        <span>Tüm modüller şirket içi kullanım için yetkilendirilmiştir. Kartlara tıklayarak ilgili sisteme yönlendirilirsiniz.</span>
+        <!-- 4. KA Etiket Sistemi (YENİ) -->
+        <a href="https://musyus56.github.io/kaetiket/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #8b5cf6;"></div>
+            <div class="icon-bg" style="color: #8b5cf6; background:#f3e8ff;">
+                <i class="fas fa-tag"></i>
+            </div>
+            <div class="module-title">KA Etiket Sistemi</div>
+            <div class="module-desc">
+                4x4 inç (10x10 cm) etiketler için KA kodu, isim soyisim, not bölümü ve barkodlu etiket oluşturun. Zebra yazıcı uyumlu.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
     </div>
 </div>
 
 <div class="footer">
-    © 2025 — Kurumsal İç Yönlendirme Sistemi | Operasyonel modüller aktif
+    © 2025 — Kurumsal İç Yönlendirme Sistemi | 4 modül aktif • Tüm hakları saklıdır
 </div>
 
 <script>
-    // Konsolda link kontrolü
-    console.log("✅ Yönlendirme paneline hoş geldiniz!");
+    console.log("✅ Yönlendirme paneline hoş geldiniz! 4 modül aktif.");
     console.log("Mağaza/Stok: https://musyus56.github.io/maker-stok-ki-i/");
     console.log("Barkod Modülü: https://musyus56.github.io/makerbarkod/");
     console.log("Teknik Destek: https://musyus56.github.io/maker-teknik-destek/");
+    console.log("KA Etiket: https://musyus56.github.io/kaetiket/");
 </script>
 </body>
 </html>
