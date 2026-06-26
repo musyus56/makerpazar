@@ -79,16 +79,16 @@
 
         /* Ana içerik */
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 2rem auto;
             padding: 0 1.5rem;
             flex: 1;
         }
 
-        /* Grid sistem - 4 kart */
+        /* Grid sistem - 6 kart */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
             gap: 1.8rem;
             margin-bottom: 2rem;
         }
@@ -107,9 +107,18 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            pointer-events: none; /* şifre koruması nedeniyle tıklama devre dışı */
+            opacity: 0.6;
+            filter: grayscale(0.4);
         }
 
-        .module-card:hover {
+        .module-card.active {
+            pointer-events: auto;
+            opacity: 1;
+            filter: grayscale(0);
+        }
+
+        .module-card.active:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
             border-color: #cbd5e1;
@@ -137,7 +146,7 @@
         }
 
         .module-title {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
@@ -147,6 +156,7 @@
             font-size: 0.8rem;
             line-height: 1.4;
             margin-bottom: 1.2rem;
+            flex: 1;
         }
 
         .link-hint {
@@ -163,8 +173,113 @@
             transition: transform 0.2s;
         }
 
-        .module-card:hover .link-hint i {
+        .module-card.active:hover .link-hint i {
             transform: translateX(4px);
+        }
+
+        /* Şifre modal */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .password-box {
+            background: white;
+            padding: 2.5rem 2.2rem;
+            border-radius: 28px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            animation: fadeUp 0.3s ease;
+        }
+
+        @keyframes fadeUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .password-box i {
+            font-size: 2.8rem;
+            color: #0a66c2;
+            background: #eef2ff;
+            padding: 16px;
+            border-radius: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .password-box h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+
+        .password-box p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .password-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .password-box input {
+            padding: 0.9rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+            text-align: center;
+            letter-spacing: 4px;
+            font-weight: 600;
+        }
+
+        .password-box input:focus {
+            border-color: #0a66c2;
+        }
+
+        .password-box .error-msg {
+            color: #dc2626;
+            font-size: 0.8rem;
+            min-height: 1.5rem;
+            margin-top: -0.2rem;
+        }
+
+        .password-box button {
+            background: #0a66c2;
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .password-box button:hover {
+            background: #004182;
         }
 
         /* Footer */
@@ -188,7 +303,10 @@
                 margin: 1.5rem auto;
             }
             .module-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+            }
+            .password-box {
+                padding: 2rem 1.5rem;
             }
         }
     </style>
@@ -201,7 +319,7 @@
             <i class="fas fa-chalkboard-user"></i>
         </div>
         <div class="logo-text">Operasyon Portalı</div>
-        <div class="badge">4 Modül Aktif</div>
+        <div class="badge">6 Modül Aktif</div>
     </div>
 </div>
 
@@ -256,7 +374,7 @@
             </div>
         </a>
 
-        <!-- 4. KA Etiket Sistemi (YENİ) -->
+        <!-- 4. KA Etiket Sistemi -->
         <a href="https://musyus56.github.io/kaetiket/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #8b5cf6;"></div>
             <div class="icon-bg" style="color: #8b5cf6; background:#f3e8ff;">
@@ -271,19 +389,122 @@
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
+
+        <!-- 5. maker (Genel) -->
+        <a href="https://musyus56.github.io/maker/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #d97706;"></div>
+            <div class="icon-bg" style="color: #d97706; background:#fef3c7;">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="module-title">Maker Genel</div>
+            <div class="module-desc">
+                Maker ana modülü. Ürün yönetimi, genel operasyon araçları ve hızlı erişim noktaları.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- 6. Cari Maker -->
+        <a href="https://musyus56.github.io/carimaker/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #0b6e4f;"></div>
+            <div class="icon-bg" style="color: #0b6e4f; background:#e0f2e9;">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="module-title">Cari Maker</div>
+            <div class="module-desc">
+                Cari hesaplar, müşteri yönetimi ve finansal takip için özel modül.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
     </div>
 </div>
 
 <div class="footer">
-    © 2025 — Kurumsal İç Yönlendirme Sistemi | 4 modül aktif • Tüm hakları saklıdır
+    © 2025 — Kurumsal İç Yönlendirme Sistemi | 6 modül aktif • Tüm hakları saklıdır
+</div>
+
+<!-- Şifre Modalı -->
+<div class="password-overlay" id="passwordOverlay">
+    <div class="password-box">
+        <i class="fas fa-lock"></i>
+        <h2>Güvenli Giriş</h2>
+        <p>Bu panele erişmek için şifreyi girin.</p>
+        <div class="password-input-group">
+            <input type="password" id="passwordInput" placeholder="••••" maxlength="10" autofocus>
+            <div class="error-msg" id="errorMsg"></div>
+            <button id="unlockBtn">Giriş Yap</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    console.log("✅ Yönlendirme paneline hoş geldiniz! 4 modül aktif.");
-    console.log("Mağaza/Stok: https://musyus56.github.io/maker-stok-ki-i/");
-    console.log("Barkod Modülü: https://musyus56.github.io/makerbarkod/");
-    console.log("Teknik Destek: https://musyus56.github.io/maker-teknik-destek/");
-    console.log("KA Etiket: https://musyus56.github.io/kaetiket/");
+    (function() {
+        const CORRECT_PASSWORD = '6026';
+        const overlay = document.getElementById('passwordOverlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('errorMsg');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const cards = document.querySelectorAll('.module-card');
+
+        // Başlangıçta tüm kartlar pasif
+        cards.forEach(card => card.classList.remove('active'));
+
+        function unlockSystem() {
+            const entered = passwordInput.value.trim();
+            if (entered === CORRECT_PASSWORD) {
+                // Şifre doğru
+                overlay.classList.add('hidden');
+                // Kartları aktif et
+                cards.forEach(card => card.classList.add('active'));
+                errorMsg.textContent = '';
+                passwordInput.value = '';
+                // Konsola başarılı giriş logu
+                console.log('✅ Şifre doğrulandı. Paneli açıldı.');
+            } else {
+                // Hatalı şifre
+                errorMsg.textContent = '❌ Geçersiz şifre, tekrar deneyin.';
+                passwordInput.value = '';
+                passwordInput.focus();
+                // Kırmızı yanıp sönme efekti (opsiyonel)
+                passwordInput.style.borderColor = '#dc2626';
+                setTimeout(() => {
+                    passwordInput.style.borderColor = '#e2e8f0';
+                }, 600);
+                console.warn('⚠️ Geçersiz şifre denemesi.');
+            }
+        }
+
+        // Buton tıklama
+        unlockBtn.addEventListener('click', unlockSystem);
+
+        // Enter tuşu
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                unlockSystem();
+            }
+        });
+
+        // Modal açıkken odağı inputa ver
+        window.addEventListener('load', () => {
+            setTimeout(() => passwordInput.focus(), 100);
+        });
+
+        // Otomatik odak kaybında tekrar odağı al (kullanıcı modal dışına tıklarsa)
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                passwordInput.focus();
+            }
+        });
+
+        console.log('🔐 Sistem kilitli. Şifre giriniz.');
+    })();
 </script>
+
 </body>
 </html>
