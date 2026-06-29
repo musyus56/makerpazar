@@ -28,7 +28,7 @@
         .navbar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
-            padding: 0.9rem 2rem;
+            padding: 0.7rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -46,16 +46,11 @@
             gap: 12px;
         }
 
-        .logo-icon {
-            background: #0a66c2;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.4rem;
+        .logo-img {
+            height: 44px;
+            width: auto;
+            border-radius: 6px;
+            object-fit: contain;
         }
 
         .logo-text {
@@ -77,10 +72,45 @@
             color: #1e40af;
         }
 
+        /* Hoş Geldin Mesajı */
+        .welcome-banner {
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            border-radius: 16px;
+            padding: 1rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #0a66c2;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            min-height: 60px;
+        }
+
+        .welcome-banner i {
+            font-size: 1.8rem;
+            color: #0a66c2;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .welcome-banner .welcome-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .welcome-banner .welcome-sub {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-left: auto;
+        }
+
         /* Ana içerik */
         .container {
             max-width: 1400px;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1.5rem;
             flex: 1;
         }
@@ -107,7 +137,7 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            pointer-events: none; /* şifre koruması nedeniyle tıklama devre dışı */
+            pointer-events: none;
             opacity: 0.6;
             filter: grayscale(0.4);
         }
@@ -214,23 +244,21 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .password-box i {
-            font-size: 2.8rem;
-            color: #0a66c2;
-            background: #eef2ff;
-            padding: 16px;
-            border-radius: 60px;
-            margin-bottom: 1rem;
+        .password-box .modal-logo {
+            height: 70px;
+            width: auto;
+            margin-bottom: 0.5rem;
+            object-fit: contain;
         }
 
         .password-box h2 {
             font-size: 1.6rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             color: #0f172a;
         }
 
-        .password-box p {
+        .password-box .modal-sub {
             color: #64748b;
             font-size: 0.9rem;
             margin-bottom: 1.8rem;
@@ -300,13 +328,24 @@
             }
             .container {
                 padding: 0 1rem;
-                margin: 1.5rem auto;
+                margin: 1rem auto;
             }
             .module-title {
                 font-size: 1.1rem;
             }
             .password-box {
                 padding: 2rem 1.5rem;
+            }
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            .welcome-banner .welcome-sub {
+                margin-left: 0;
+            }
+            .logo-img {
+                height: 36px;
             }
         }
     </style>
@@ -315,15 +354,21 @@
 
 <div class="navbar">
     <div class="logo-area">
-        <div class="logo-icon">
-            <i class="fas fa-chalkboard-user"></i>
-        </div>
+        <!-- ŞİRKET LOGOSU - logo.png dosyasını aynı klasöre koyun -->
+        <img src="logo.png" alt="Şirket Logosu" class="logo-img">
         <div class="logo-text">Operasyon Portalı</div>
         <div class="badge">6 Modül Aktif</div>
     </div>
 </div>
 
 <div class="container">
+    <!-- Hoş Geldin Banner - Başlangıçta gizli -->
+    <div class="welcome-banner" id="welcomeBanner" style="display: none;">
+        <i class="fas fa-hand-wave"></i>
+        <span class="welcome-text" id="welcomeText">Hoş Geldiniz!</span>
+        <span class="welcome-sub" id="welcomeSub">Sisteme giriş yaptınız</span>
+    </div>
+
     <div class="modules-grid">
         
         <!-- 1. Mağaza Teslim & Stok -->
@@ -431,9 +476,10 @@
 <!-- Şifre Modalı -->
 <div class="password-overlay" id="passwordOverlay">
     <div class="password-box">
-        <i class="fas fa-lock"></i>
+        <!-- Modal içinde logo -->
+        <img src="logo.png" alt="Şirket Logosu" class="modal-logo">
         <h2>Güvenli Giriş</h2>
-        <p>Bu panele erişmek için şifreyi girin.</p>
+        <p class="modal-sub">Bu panele erişmek için şifreyi girin.</p>
         <div class="password-input-group">
             <input type="password" id="passwordInput" placeholder="••••" maxlength="10" autofocus>
             <div class="error-msg" id="errorMsg"></div>
@@ -444,33 +490,50 @@
 
 <script>
     (function() {
-        const CORRECT_PASSWORD = '6026';
+        // Şifre ve mesaj eşleştirmeleri
+        const USER_MAP = {
+            '6026': { name: 'Yasin', greeting: 'Merhaba Yasin! 👋' },
+            '4256': { name: 'Mustafa', greeting: 'Merhaba Mustafa! 👋' }
+        };
+
         const overlay = document.getElementById('passwordOverlay');
         const passwordInput = document.getElementById('passwordInput');
         const errorMsg = document.getElementById('errorMsg');
         const unlockBtn = document.getElementById('unlockBtn');
         const cards = document.querySelectorAll('.module-card');
+        const welcomeBanner = document.getElementById('welcomeBanner');
+        const welcomeText = document.getElementById('welcomeText');
+        const welcomeSub = document.getElementById('welcomeSub');
 
         // Başlangıçta tüm kartlar pasif
         cards.forEach(card => card.classList.remove('active'));
+        welcomeBanner.style.display = 'none';
 
         function unlockSystem() {
             const entered = passwordInput.value.trim();
-            if (entered === CORRECT_PASSWORD) {
+            
+            // Kullanıcıyı bul
+            const user = USER_MAP[entered];
+            
+            if (user) {
                 // Şifre doğru
                 overlay.classList.add('hidden');
                 // Kartları aktif et
                 cards.forEach(card => card.classList.add('active'));
                 errorMsg.textContent = '';
                 passwordInput.value = '';
-                // Konsola başarılı giriş logu
-                console.log('✅ Şifre doğrulandı. Paneli açıldı.');
+                
+                // Hoş geldin mesajını göster
+                welcomeBanner.style.display = 'flex';
+                welcomeText.textContent = user.greeting;
+                welcomeSub.textContent = `Hoş geldin ${user.name}! Tüm modüllere erişebilirsin.`;
+                
+                console.log(`✅ ${user.name} giriş yaptı. Paneli açıldı.`);
             } else {
                 // Hatalı şifre
                 errorMsg.textContent = '❌ Geçersiz şifre, tekrar deneyin.';
                 passwordInput.value = '';
                 passwordInput.focus();
-                // Kırmızı yanıp sönme efekti (opsiyonel)
                 passwordInput.style.borderColor = '#dc2626';
                 setTimeout(() => {
                     passwordInput.style.borderColor = '#e2e8f0';
@@ -495,14 +558,15 @@
             setTimeout(() => passwordInput.focus(), 100);
         });
 
-        // Otomatik odak kaybında tekrar odağı al (kullanıcı modal dışına tıklarsa)
+        // Otomatik odak kaybında tekrar odağı al
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 passwordInput.focus();
             }
         });
 
-        console.log('🔐 Sistem kilitli. Şifre giriniz.');
+        console.log('🔐 Sistem kilitli. Şifre giriniz. (6026 = Yasin, 4256 = Mustafa)');
+        console.log('📁 Logo dosyası: logo.png (aynı klasörde olmalı)');
     })();
 </script>
 
