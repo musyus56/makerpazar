@@ -118,7 +118,7 @@
         /* Grid sistem - 8 kart */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.8rem;
             margin-bottom: 2rem;
         }
@@ -176,9 +176,10 @@
         }
 
         .module-title {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
 
         .module-desc {
@@ -205,6 +206,18 @@
 
         .module-card.active:hover .link-hint i {
             transform: translateX(4px);
+        }
+
+        .module-number {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            background: #f1f5f9;
+            padding: 0.15rem 0.6rem;
+            border-radius: 30px;
         }
 
         /* Şifre modal */
@@ -331,7 +344,7 @@
                 margin: 1rem auto;
             }
             .module-title {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             .password-box {
                 padding: 2rem 1.5rem;
@@ -346,6 +359,12 @@
             }
             .logo-img {
                 height: 36px;
+            }
+            .module-number {
+                font-size: 0.6rem;
+                top: 8px;
+                right: 10px;
+                padding: 0.1rem 0.5rem;
             }
         }
     </style>
@@ -371,15 +390,16 @@
 
     <div class="modules-grid">
         
-        <!-- 1. Mağaza Teslim & Stok -->
+        <!-- 1. Ürün Bekleme Listesi -->
         <a href="https://musyus56.github.io/maker-stok-ki-i/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #2b6e3c;"></div>
+            <span class="module-number">#1</span>
             <div class="icon-bg" style="color: #2b6e3c; background:#e8f3e9;">
-                <i class="fas fa-boxes"></i>
+                <i class="fas fa-clock"></i>
             </div>
             <div class="module-title">Ürün Bekleme Listesi</div>
             <div class="module-desc">
-                Stok bildirim sistemi. Stokta olmayan ürünler için müşteri bilgilerini kaydedin, ürün geldiğinde kolayca ulaşın.
+                Stokta olmayan ürünler için müşteri bekleme listesi. Ürün geldiğinde müşteriye hızlıca ulaşın.
             </div>
             <div class="link-hint">
                 <span>Sisteme git</span>
@@ -387,9 +407,44 @@
             </div>
         </a>
 
-        <!-- 2. Barkod İstek Listesi -->
+        <!-- 2. Gelir & Gider Yönetimi -->
+        <a href="https://musyus56.github.io/mkrkasa/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #059669;"></div>
+            <span class="module-number">#2</span>
+            <div class="icon-bg" style="color: #059669; background:#d1fae5;">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div class="module-title">Gelir & Gider Yönetimi</div>
+            <div class="module-desc">
+                Gelir ve giderleri kaydedin, müşteri bazlı takip yapın, havale alacak kişileri ve hazır gider kalemlerini yönetin.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- 3. Ürün Seri Numarası -->
+        <a href="https://musyus56.github.io/-r-n-seri/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #0891b2;"></div>
+            <span class="module-number">#3</span>
+            <div class="icon-bg" style="color: #0891b2; background:#e0f7fa;">
+                <i class="fas fa-hashtag"></i>
+            </div>
+            <div class="module-title">Ürün Seri Numarası</div>
+            <div class="module-desc">
+                Müşteri, sipariş no, platform, cihaz ve ürün-seri bilgilerini tek bir yerden takip edin. Her kayıt ayrı bir etiket olarak listelenir.
+            </div>
+            <div class="link-hint">
+                <span>Sisteme git</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- 4. Mağaza Teslim Barkod -->
         <a href="https://musyus56.github.io/makerbarkod/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #1e6f9f;"></div>
+            <span class="module-number">#4</span>
             <div class="icon-bg" style="color: #1e6f9f; background:#e6f2f9;">
                 <i class="fas fa-barcode"></i>
             </div>
@@ -403,9 +458,10 @@
             </div>
         </a>
 
-        <!-- 3. Arızalı Ürünler & Teknik Destek -->
+        <!-- 5. Arızalı Ürünler & Teknik Destek -->
         <a href="https://musyus56.github.io/maker-teknik-destek/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #b91c1c;"></div>
+            <span class="module-number">#5</span>
             <div class="icon-bg" style="color: #b91c1c; background:#fee9e9;">
                 <i class="fas fa-microchip"></i>
             </div>
@@ -419,9 +475,10 @@
             </div>
         </a>
 
-        <!-- 4. KA Etiket Sistemi -->
+        <!-- 6. KA Etiket Sistemi -->
         <a href="https://musyus56.github.io/kaetiket/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #8b5cf6;"></div>
+            <span class="module-number">#6</span>
             <div class="icon-bg" style="color: #8b5cf6; background:#f3e8ff;">
                 <i class="fas fa-tag"></i>
             </div>
@@ -435,15 +492,16 @@
             </div>
         </a>
 
-        <!-- 5. maker (Genel) -->
+        <!-- 7. Numune Ürün Etiketi -->
         <a href="https://musyus56.github.io/maker/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #d97706;"></div>
+            <span class="module-number">#7</span>
             <div class="icon-bg" style="color: #d97706; background:#fef3c7;">
-                <i class="fas fa-cube"></i>
+                <i class="fas fa-flask"></i>
             </div>
             <div class="module-title">Numune Ürün Etiketi</div>
             <div class="module-desc">
-                Maker ana modülü. Ürün yönetimi, genel operasyon araçları ve hızlı erişim noktaları.
+                Numune ürünler için etiket oluşturma ve yönetim modülü. Ürün bilgilerini hızlıca etiketleyin.
             </div>
             <div class="link-hint">
                 <span>Sisteme git</span>
@@ -451,47 +509,16 @@
             </div>
         </a>
 
-        <!-- 6. Cari Maker -->
+        <!-- 8. Cari Sistemi -->
         <a href="https://musyus56.github.io/carimaker/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #0b6e4f;"></div>
+            <span class="module-number">#8</span>
             <div class="icon-bg" style="color: #0b6e4f; background:#e0f2e9;">
                 <i class="fas fa-users"></i>
             </div>
             <div class="module-title">Cari Sistemi</div>
             <div class="module-desc">
                 Cari hesaplar, müşteri yönetimi ve finansal takip için özel modül.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-
-        <!-- 7. Sipariş Takip (Ürün-Seri) -->
-        <a href="https://musyus56.github.io/-r-n-seri/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #0891b2;"></div>
-            <div class="icon-bg" style="color: #0891b2; background:#e0f7fa;">
-                <i class="fas fa-clipboard-list"></i>
-            </div>
-            <div class="module-title">Ürün Seri Numarası</div>
-            <div class="module-desc">
-                Müşteri, sipariş no, platform, cihaz ve ürün-seri bilgilerini tek bir yerden takip edin. Her kayıt ayrı bir etiket olarak listelenir.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-
-        <!-- 8. Gelir & Gider Yönetimi (Kasa) - YENİ -->
-        <a href="https://musyus56.github.io/mkrkasa/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #059669;"></div>
-            <div class="icon-bg" style="color: #059669; background:#d1fae5;">
-                <i class="fas fa-coins"></i>
-            </div>
-            <div class="module-title">Gelir & Gider Yönetimi </div>
-            <div class="module-desc">
-                Gelir ve giderleri kaydedin, müşteri bazlı takip yapın, havale alacak kişileri ve hazır gider kalemlerini yönetin. Firebase altyapılı.
             </div>
             <div class="link-hint">
                 <span>Sisteme git</span>
@@ -508,7 +535,6 @@
 <!-- Şifre Modalı -->
 <div class="password-overlay" id="passwordOverlay">
     <div class="password-box">
-        <!-- Modal içinde logo -->
         <img src="logo.png" alt="Şirket Logosu" class="modal-logo">
         <h2>Güvenli Giriş</h2>
         <p class="modal-sub">Bu panele erişmek için şifreyi girin.</p>
@@ -544,25 +570,20 @@
         function unlockSystem() {
             const entered = passwordInput.value.trim();
             
-            // Kullanıcıyı bul
             const user = USER_MAP[entered];
             
             if (user) {
-                // Şifre doğru
                 overlay.classList.add('hidden');
-                // Kartları aktif et
                 cards.forEach(card => card.classList.add('active'));
                 errorMsg.textContent = '';
                 passwordInput.value = '';
                 
-                // Hoş geldin mesajını göster
                 welcomeBanner.style.display = 'flex';
                 welcomeText.textContent = user.greeting;
                 welcomeSub.textContent = `Hoş geldin ${user.name}! Tüm modüllere erişebilirsin.`;
                 
                 console.log(`✅ ${user.name} giriş yaptı. Paneli açıldı.`);
             } else {
-                // Hatalı şifre
                 errorMsg.textContent = '❌ Geçersiz şifre, tekrar deneyin.';
                 passwordInput.value = '';
                 passwordInput.focus();
@@ -574,10 +595,7 @@
             }
         }
 
-        // Buton tıklama
         unlockBtn.addEventListener('click', unlockSystem);
-
-        // Enter tuşu
         passwordInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -585,12 +603,10 @@
             }
         });
 
-        // Modal açıkken odağı inputa ver
         window.addEventListener('load', () => {
             setTimeout(() => passwordInput.focus(), 100);
         });
 
-        // Otomatik odak kaybında tekrar odağı al
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 passwordInput.focus();
@@ -599,7 +615,7 @@
 
         console.log('🔐 Sistem kilitli. Şifre giriniz. (6026 = Yasin, 4256 = Mustafa)');
         console.log('📁 Logo dosyası: logo.png (aynı klasörde olmalı)');
-        console.log('🆕 Yeni modül eklendi: Gelir & Gider Yönetimi (Kasa)');
+        console.log('📋 Modül sıralaması: 1.Ürün Bekleme, 2.Gelir/Gider, 3.Ürün Seri, 4.Mağaza Barkod, 5.Arızalı Ürün, 6.KA Etiket, 7.Numune Etiket, 8.Cari Sistemi');
     })();
 </script>
 
