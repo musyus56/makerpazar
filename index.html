@@ -1,8 +1,3 @@
-Harika, hemen size hem görsel olarak etkileyici, hem mobil uyumlu, hem de acil durum iletişim bilgilerini öne çıkaran bir kod hazırlıyorum.
-
-Aşağıdaki HTML/CSS kodunu kopyalayıp sitenizin ana dizinine index.html veya bakim.html olarak yükleyebilirsiniz.
-
-```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -12,142 +7,145 @@ Aşağıdaki HTML/CSS kodunu kopyalayıp sitenizin ana dizinine index.html veya 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* RESET & TAM EKRAN */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #0b1a2e, #1b2f4a);
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0b1a2e, #1b2f4a);
-            color: #fff;
             padding: 20px;
+        }
+
+        /* KART - TAM EKRANA YAYILAN */
+        .bakim-kart {
+            width: 100%;
+            max-width: 850px;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 50px;
+            padding: 60px 45px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: 0.3s;
             text-align: center;
         }
 
-        .bakim-kart {
-            max-width: 750px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 60px 40px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: 0.3s;
-        }
-
-        /* İkon / Logo */
+        /* İkon */
         .ikon {
-            font-size: 70px;
-            margin-bottom: 20px;
+            font-size: 80px;
+            margin-bottom: 18px;
             display: inline-block;
-            animation: sallan 2.5s infinite ease-in-out;
+            animation: sallan 2.8s infinite ease-in-out;
         }
 
         @keyframes sallan {
             0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(8deg) scale(1.08); }
+            50% { transform: rotate(10deg) scale(1.10); }
             100% { transform: rotate(0deg) scale(1); }
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 3.8rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
             background: linear-gradient(to right, #f0e6a0, #ffd966);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .aciklama {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 300;
             color: #d4e2f0;
-            margin-bottom: 12px;
-            line-height: 1.6;
+            margin-bottom: 10px;
+            line-height: 1.7;
         }
 
         .vurgu {
             font-weight: 700;
             color: #ffd966;
             background: rgba(255, 215, 0, 0.12);
-            padding: 4px 14px;
+            padding: 4px 18px;
             border-radius: 60px;
             display: inline-block;
-            backdrop-filter: blur(4px);
-            margin-top: 4px;
         }
 
         .tarih-saat {
-            margin: 25px 0 20px 0;
-            font-size: 0.95rem;
+            margin: 22px 0 18px 0;
+            font-size: 1rem;
             color: #b6cde3;
             letter-spacing: 1px;
-            background: rgba(0,0,0,0.2);
-            padding: 10px 20px;
+            background: rgba(0,0,0,0.25);
+            padding: 10px 28px;
             border-radius: 60px;
             display: inline-block;
-            backdrop-filter: blur(4px);
         }
 
-        /* ACİL BUTON - abilities vurgusu */
+        /* ACİL BUTON */
         .acil-buton {
-            margin-top: 30px;
-            padding: 18px 30px;
-            background: rgba(255, 215, 0, 0.12);
-            border: 1.5px solid #ffd966;
-            border-radius: 70px;
+            margin-top: 28px;
+            padding: 20px 38px;
+            background: rgba(255, 215, 0, 0.10);
+            border: 1.8px solid #ffd966;
+            border-radius: 80px;
             display: inline-flex;
             align-items: center;
-            gap: 14px;
+            gap: 18px;
             backdrop-filter: blur(8px);
             transition: 0.25s;
             text-decoration: none;
             color: #fff;
             font-weight: 500;
             font-size: 1.2rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.06);
         }
 
         .acil-buton:hover {
             background: #ffd966;
             color: #0b1a2e;
-            transform: scale(1.03);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.25);
+            transform: scale(1.04);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.25);
             border-color: #ffd966;
         }
 
         .acil-buton .emoji {
-            font-size: 2rem;
+            font-size: 2.2rem;
             line-height: 1;
         }
 
         .acil-buton .telefon {
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             letter-spacing: 1.5px;
         }
 
         .abilite-not {
-            margin-top: 18px;
-            font-size: 0.85rem;
+            margin-top: 20px;
+            font-size: 0.9rem;
             color: #9bb3cc;
             background: rgba(255,255,255,0.04);
-            padding: 8px 20px;
+            padding: 8px 24px;
             border-radius: 60px;
             display: inline-block;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
         }
 
         .abilite-not strong {
@@ -155,12 +153,36 @@ Aşağıdaki HTML/CSS kodunu kopyalayıp sitenizin ana dizinine index.html veya 
             font-weight: 600;
         }
 
-        /* mobil */
-        @media (max-width: 550px) {
-            .bakim-kart { padding: 40px 20px; }
-            h1 { font-size: 2.2rem; }
-            .acil-buton { flex-wrap: wrap; justify-content: center; padding: 14px 22px; }
+        .footer-not {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #7f9bb5;
+            opacity: 0.5;
+        }
+
+        /* MOBİL */
+        @media (max-width: 600px) {
+            .bakim-kart {
+                padding: 40px 20px;
+                min-height: 80vh;
+                border-radius: 30px;
+            }
+            h1 { font-size: 2.5rem; }
+            .aciklama { font-size: 1.1rem; }
+            .acil-buton {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 16px 24px;
+                gap: 12px;
+            }
             .acil-buton .telefon { font-size: 1.3rem; }
+            .ikon { font-size: 60px; }
+        }
+
+        @media (max-width: 400px) {
+            h1 { font-size: 2rem; }
+            .bakim-kart { padding: 30px 16px; }
+            .acil-buton .telefon { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -168,7 +190,6 @@ Aşağıdaki HTML/CSS kodunu kopyalayıp sitenizin ana dizinine index.html veya 
 
     <div class="bakim-kart">
 
-        <!-- Animasyonlu ikon -->
         <div class="ikon">🛠️</div>
 
         <h1>Yenileniyoruz</h1>
@@ -178,52 +199,35 @@ Aşağıdaki HTML/CSS kodunu kopyalayıp sitenizin ana dizinine index.html veya 
             size daha iyi hizmet verebilmek için yenileniyor.
         </p>
 
-        <p class="aciklama" style="font-size:1.4rem; font-weight:400; margin-top:6px;">
+        <p class="aciklama" style="font-size:1.5rem; font-weight:400; margin-top:4px;">
             💎 Yeni sitemiz <strong style="color:#ffd966;">en kısa zamanda</strong> sizlerle!
         </p>
 
-        <!-- Tarih / sayaç hissi -->
         <div class="tarih-saat">
             ⏳ Bakım çalışmaları devam ediyor &nbsp;·&nbsp; 2026
         </div>
 
-        <!-- ACİL DURUM BUTONU - abilities vurgusu + telefon -->
+        <!-- ACİL BUTON -->
         <a href="tel:+905523776356" class="acil-buton">
             <span class="emoji">🚨</span>
             <span>
-                <span style="display:block; font-size:0.8rem; opacity:0.8; font-weight:300;">Çok acil?</span>
+                <span style="display:block; font-size:0.75rem; opacity:0.7; font-weight:300;">Çok acil?</span>
                 <span class="telefon">0 552 377 63 56</span>
             </span>
-            <span style="font-size:1rem; background:rgba(255,255,255,0.1); padding:2px 14px; border-radius:60px;">
+            <span style="font-size:0.95rem; background:rgba(255,255,255,0.08); padding:4px 18px; border-radius:60px;">
                 abilities
             </span>
         </a>
 
-        <!-- abilities etiketi alt bilgi -->
         <div class="abilite-not">
             ⚡ <strong>abilities</strong> · 7/24 öncelikli destek hattı
         </div>
 
-        <!-- küçük not -->
-        <p style="margin-top:28px; font-size:0.8rem; color:#7f9bb5; opacity:0.6;">
+        <div class="footer-not">
             Teşekkürler, sabrınız için 🙏
-        </p>
+        </div>
 
     </div>
 
 </body>
 </html>
-```
-
----
-
-📌 Bu kodda neler var:
-
-· Modern cam efekti (glassmorphism) ve gradient arka plan
-· "Yeni sitemiz en kısa zamanda sizlerle" metni öne çıkarıldı
-· Acil durum butonu içinde tam olarak istediğiniz gibi 0 552 377 63 56 ve "abilities" yazıyor
-· Buton tıklanabilir (telefon bağlantısı)
-· Mobil cihazlara tam uyumlu
-· İkon animasyonu ile hareket katıldı
-
-Kodu doğrudan kullanabilir, renkleri veya metinleri kendi zevkinize göre değiştirebilirsiniz. 😊
