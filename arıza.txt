@@ -1,3 +1,6 @@
+Harika! Logoyu ve "Makerpazar ailesi olarak..." metnini ekledim. İşte güncellenmiş kod:
+
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -5,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sitemiz Yenileniyor</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         /* RESET & TAM EKRAN */
         * {
@@ -26,7 +29,7 @@
             padding: 20px;
         }
 
-        /* KART - TAM EKRANA YAYILAN */
+        /* KART */
         .bakim-kart {
             width: 100%;
             max-width: 850px;
@@ -46,10 +49,24 @@
             text-align: center;
         }
 
-        /* İkon */
+        /* LOGO */
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.15));
+            transition: 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.25));
+        }
+
+        /* İkon (artık ikincil oldu) */
         .ikon {
-            font-size: 80px;
-            margin-bottom: 18px;
+            font-size: 60px;
+            margin-bottom: 10px;
             display: inline-block;
             animation: sallan 2.8s infinite ease-in-out;
         }
@@ -61,14 +78,22 @@
         }
 
         h1 {
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 700;
             letter-spacing: -1px;
             background: linear-gradient(to right, #f0e6a0, #ffd966);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        .alt-baslik {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #d4e2f0;
+            margin-bottom: 6px;
+            line-height: 1.6;
         }
 
         .aciklama {
@@ -88,8 +113,27 @@
             display: inline-block;
         }
 
+        /* MAKERPAZAR ÖZEL METNİ */
+        .maker-mesaj {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #e8f0f8;
+            background: rgba(255, 215, 0, 0.06);
+            padding: 12px 28px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 215, 0, 0.10);
+            margin: 10px 0 15px 0;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+        }
+
+        .maker-mesaj strong {
+            color: #ffd966;
+            font-weight: 600;
+        }
+
         .tarih-saat {
-            margin: 22px 0 18px 0;
+            margin: 18px 0 16px 0;
             font-size: 1rem;
             color: #b6cde3;
             letter-spacing: 1px;
@@ -101,7 +145,7 @@
 
         /* ACİL BUTON */
         .acil-buton {
-            margin-top: 28px;
+            margin-top: 25px;
             padding: 20px 38px;
             background: rgba(255, 215, 0, 0.10);
             border: 1.8px solid #ffd966;
@@ -138,7 +182,7 @@
         }
 
         .abilite-not {
-            margin-top: 20px;
+            margin-top: 18px;
             font-size: 0.9rem;
             color: #9bb3cc;
             background: rgba(255,255,255,0.04);
@@ -154,7 +198,7 @@
         }
 
         .footer-not {
-            margin-top: 30px;
+            margin-top: 28px;
             font-size: 0.85rem;
             color: #7f9bb5;
             opacity: 0.5;
@@ -169,6 +213,7 @@
             }
             h1 { font-size: 2.5rem; }
             .aciklama { font-size: 1.1rem; }
+            .maker-mesaj { font-size: 0.95rem; padding: 10px 18px; }
             .acil-buton {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -176,13 +221,15 @@
                 gap: 12px;
             }
             .acil-buton .telefon { font-size: 1.3rem; }
-            .ikon { font-size: 60px; }
+            .ikon { font-size: 50px; }
+            .logo { width: 90px; }
         }
 
         @media (max-width: 400px) {
             h1 { font-size: 2rem; }
             .bakim-kart { padding: 30px 16px; }
             .acil-buton .telefon { font-size: 1.1rem; }
+            .logo { width: 75px; }
         }
     </style>
 </head>
@@ -190,6 +237,10 @@
 
     <div class="bakim-kart">
 
+        <!-- LOGO - logo.png -->
+        <img src="logo.png" alt="Makerpazar Logo" class="logo">
+
+        <!-- İkon (yardımcı) -->
         <div class="ikon">🛠️</div>
 
         <h1>Yenileniyoruz</h1>
@@ -199,7 +250,12 @@
             size daha iyi hizmet verebilmek için yenileniyor.
         </p>
 
-        <p class="aciklama" style="font-size:1.5rem; font-weight:400; margin-top:4px;">
+        <!-- MAKERPAZAR ÖZEL MESAJI -->
+        <div class="maker-mesaj">
+            🚀 <strong>Makerpazar</strong> ailesi olarak size daha iyi hizmet vermemiz için çalışıyoruz
+        </div>
+
+        <p class="aciklama" style="font-size:1.4rem; font-weight:400; margin-top:2px;">
             💎 Yeni sitemiz <strong style="color:#ffd966;">en kısa zamanda</strong> sizlerle!
         </p>
 
@@ -231,3 +287,26 @@
 
 </body>
 </html>
+```
+
+---
+
+📌 Eklenenler:
+
+Öğe Açıklama
+logo.png Sayfanın en üstüne eklendi, width:120px ile boyutlandı, hover efekti var
+Makerpazar mesajı "🚀 Makerpazar ailesi olarak size daha iyi hizmet vermemiz için çalışıyoruz" - özel arka plan ve vurgu ile
+
+---
+
+⚠️ Önemli Not:
+
+logo.png dosyasını bu HTML dosyasıyla aynı klasöre koymayı unutmayın. Dosya adı tam olarak logo.png olmalı (büyük/küçük harf duyarlı).
+
+Eğer logo farklı bir klasördeyse src yolunu şöyle güncelleyin:
+
+```html
+<img src="resimler/logo.png" alt="Makerpazar Logo" class="logo">
+```
+
+Her şey hazır, sayfa tam ekran ve şık görünüyor! 🎉
