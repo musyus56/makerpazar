@@ -2,622 +2,224 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Kurumsal İç Sistem | Operasyon Paneli</title>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiyat Teklif Formu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f4f6fa;
-            color: #1e293b;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: #f4f7fc;
+            padding: 2rem;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
-
-        /* Üst Bar */
-        .navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.7rem 2rem;
+        .panel-header {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-img {
-            height: 44px;
-            width: auto;
-            border-radius: 6px;
-            object-fit: contain;
-        }
-
-        .logo-text {
+        .panel-header h1 {
+            font-size: 1.5rem;
             font-weight: 700;
-            font-size: 1.3rem;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #0a66c2, #004182);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #0f172a;
+            margin: 0;
         }
-
-        .badge {
+        .panel-header .back-btn {
             background: #eef2ff;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #1e40af;
-        }
-
-        /* Hoş Geldin Mesajı */
-        .welcome-banner {
-            background: linear-gradient(135deg, #f8fafc, #eef2ff);
-            border-radius: 16px;
-            padding: 1rem 1.8rem;
-            margin-bottom: 2rem;
-            border-left: 5px solid #0a66c2;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            min-height: 60px;
-        }
-
-        .welcome-banner i {
-            font-size: 1.8rem;
             color: #0a66c2;
-            background: white;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .welcome-banner .welcome-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #0f172a;
-        }
-
-        .welcome-banner .welcome-sub {
-            font-size: 0.85rem;
-            color: #475569;
-            margin-left: auto;
-        }
-
-        /* Ana içerik */
-        .container {
-            max-width: 1400px;
-            margin: 1.5rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
-        }
-
-        /* Grid sistem - 8 kart */
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.8rem;
-            margin-bottom: 2rem;
-        }
-
-        .module-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.6rem;
-            transition: all 0.25s ease;
-            border: 1px solid #eef2f6;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            pointer-events: none;
-            opacity: 0.6;
-            filter: grayscale(0.4);
-        }
-
-        .module-card.active {
-            pointer-events: auto;
-            opacity: 1;
-            filter: grayscale(0);
-        }
-
-        .module-card.active:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
-            border-color: #cbd5e1;
-        }
-
-        /* Renkli üst çizgi */
-        .card-accent {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-        }
-
-        .icon-bg {
-            width: 56px;
-            height: 56px;
-            background: #f1f5f9;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.2rem;
-            font-size: 1.8rem;
-        }
-
-        .module-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-
-        .module-desc {
-            color: #475569;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            margin-bottom: 1.2rem;
-            flex: 1;
-        }
-
-        .link-hint {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #0a66c2;
-            margin-top: auto;
-        }
-
-        .link-hint i {
-            transition: transform 0.2s;
-        }
-
-        .module-card.active:hover .link-hint i {
-            transform: translateX(4px);
-        }
-
-        .module-number {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #94a3b8;
-            background: #f1f5f9;
-            padding: 0.15rem 0.6rem;
-            border-radius: 30px;
-        }
-
-        /* Şifre modal */
-        .password-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            transition: opacity 0.3s ease;
-        }
-
-        .password-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .password-box {
-            background: white;
-            padding: 2.5rem 2.2rem;
-            border-radius: 28px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
-            animation: fadeUp 0.3s ease;
-        }
-
-        @keyframes fadeUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .password-box .modal-logo {
-            height: 70px;
-            width: auto;
-            margin-bottom: 0.5rem;
-            object-fit: contain;
-        }
-
-        .password-box h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: #0f172a;
-        }
-
-        .password-box .modal-sub {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 1.8rem;
-        }
-
-        .password-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .password-box input {
-            padding: 0.9rem 1.2rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 60px;
-            font-size: 1rem;
-            outline: none;
-            transition: border 0.2s;
-            text-align: center;
-            letter-spacing: 4px;
-            font-weight: 600;
-        }
-
-        .password-box input:focus {
-            border-color: #0a66c2;
-        }
-
-        .password-box .error-msg {
-            color: #dc2626;
-            font-size: 0.8rem;
-            min-height: 1.5rem;
-            margin-top: -0.2rem;
-        }
-
-        .password-box button {
-            background: #0a66c2;
-            color: white;
             border: none;
-            padding: 0.9rem;
-            border-radius: 60px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
         }
-
-        .password-box button:hover {
-            background: #004182;
+        .panel-header .back-btn:hover {
+            background: #dbeafe;
         }
-
-        /* Footer */
-        .footer {
-            border-top: 1px solid #e2e8f0;
+        .panel-content {
             background: white;
-            padding: 1rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #64748b;
-            margin-top: 1rem;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         }
-
-        /* Responsive */
-        @media (max-width: 700px) {
-            .navbar {
-                padding: 0.8rem 1.2rem;
-            }
-            .container {
-                padding: 0 1rem;
-                margin: 1rem auto;
-            }
-            .module-title {
-                font-size: 1rem;
-            }
-            .password-box {
-                padding: 2rem 1.5rem;
-            }
-            .welcome-banner {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
-            .welcome-banner .welcome-sub {
-                margin-left: 0;
-            }
-            .logo-img {
-                height: 36px;
-            }
-            .module-number {
-                font-size: 0.6rem;
-                top: 8px;
-                right: 10px;
-                padding: 0.1rem 0.5rem;
-            }
+        .panel-footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        .form-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-section h5 {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+        .item-row {
+            background: white;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .total-box {
+            background: #eef2ff;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0a66c2;
         }
     </style>
 </head>
 <body>
-
-<div class="navbar">
-    <div class="logo-area">
-        <!-- ŞİRKET LOGOSU - logo.png dosyasını aynı klasöre koyun -->
-        <img src="logo.png" alt="Şirket Logosu" class="logo-img">
-        <div class="logo-text">Operasyon Portalı</div>
-        <div class="badge">8 Modül Aktif</div>
-    </div>
-</div>
-
-<div class="container">
-    <!-- Hoş Geldin Banner - Başlangıçta gizli -->
-    <div class="welcome-banner" id="welcomeBanner" style="display: none;">
-        <i class="fas fa-hand-wave"></i>
-        <span class="welcome-text" id="welcomeText">Hoş Geldiniz!</span>
-        <span class="welcome-sub" id="welcomeSub">Sisteme giriş yaptınız</span>
-    </div>
-
-    <div class="modules-grid">
+    <div class="container" style="max-width: 1300px;">
         
-        <!-- 1. Ürün Bekleme Listesi -->
-        <a href="https://makerpazarsistem.github.io/stokbilgilendirme/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #2b6e3c;"></div>
-            <span class="module-number">#1</span>
-            <div class="icon-bg" style="color: #2b6e3c; background:#e8f3e9;">
-                <i class="fas fa-clock"></i>
+        <!-- Panel Başlığı -->
+        <div class="panel-header">
+            <div>
+                <span class="badge bg-primary me-2">#9</span>
+                <h1>📄 Fiyat Teklif Formu</h1>
+                <p class="text-muted small mt-1">Müşterilere hızlı fiyat teklifi oluşturun</p>
             </div>
-            <div class="module-title">Ürün Bekleme Listesi</div>
-            <div class="module-desc">
-                Stokta olmayan ürünler için müşteri bekleme listesi. Ürün geldiğinde müşteriye hızlıca ulaşın.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left me-2"></i> Ana Paneli Dön
+            </a>
+        </div>
 
-        <!-- 2. Gelir & Gider Yönetimi -->
-        <a href="https://makerpazarsistem.github.io/Gelir-Gider/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #059669;"></div>
-            <span class="module-number">#2</span>
-            <div class="icon-bg" style="color: #059669; background:#d1fae5;">
-                <i class="fas fa-coins"></i>
-            </div>
-            <div class="module-title">Gelir & Gider Yönetimi</div>
-            <div class="module-desc">
-                Gelir ve giderleri kaydedin, müşteri bazlı takip yapın, havale alacak kişileri ve hazır gider kalemlerini yönetin.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+        <!-- Panel İçeriği -->
+        <div class="panel-content">
+            
+            <div class="row g-4">
+                <!-- Müşteri Bilgileri -->
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <h5><i class="fas fa-user me-2 text-primary"></i> Müşteri Bilgileri</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Müşteri Adı / Firma</label>
+                            <input type="text" class="form-control" placeholder="Müşteri adını girin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon</label>
+                            <input type="text" class="form-control" placeholder="Telefon numarası">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="Email adresi">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">Adres</label>
+                            <textarea class="form-control" rows="2" placeholder="Adres bilgisi"></textarea>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- 3. Ürün Seri Numarası -->
-        <a href="https://makerpazarsistem.github.io/urunserinumaras-/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #0891b2;"></div>
-            <span class="module-number">#3</span>
-            <div class="icon-bg" style="color: #0891b2; background:#e0f7fa;">
-                <i class="fas fa-hashtag"></i>
-            </div>
-            <div class="module-title">Ürün Seri Numarası</div>
-            <div class="module-desc">
-                Müşteri, sipariş no, platform, cihaz ve ürün-seri bilgilerini tek bir yerden takip edin. Her kayıt ayrı bir etiket olarak listelenir.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+                <!-- Teklif Bilgileri -->
+                <div class="col-md-6">
+                    <div class="form-section">
+                        <h5><i class="fas fa-file-signature me-2 text-primary"></i> Teklif Bilgileri</h5>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label">Teklif No</label>
+                                <input type="text" class="form-control" value="TEKLIF-2025-001" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Tarih</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Geçerlilik Tarihi</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Teklif Notu</label>
+                                <input type="text" class="form-control" placeholder="Varsa not girin">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- 4. Mağaza Teslim Barkod -->
-        <a href="https://makerpazarsistem.github.io/Teslimbarkodu/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #1e6f9f;"></div>
-            <span class="module-number">#4</span>
-            <div class="icon-bg" style="color: #1e6f9f; background:#e6f2f9;">
-                <i class="fas fa-barcode"></i>
-            </div>
-            <div class="module-title">Mağaza Teslim Barkod</div>
-            <div class="module-desc">
-                Barkod talepleri, etiket basımı ve envanter listesi yönetimi için ilgili modüle erişin.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+                <!-- Ürün Kalemleri -->
+                <div class="col-12">
+                    <div class="form-section">
+                        <h5><i class="fas fa-list me-2 text-primary"></i> Ürün / Hizmet Kalemleri</h5>
+                        <div class="item-row">
+                            <span><strong>Ürün 1</strong> <span class="text-muted">(2 adet)</span></span>
+                            <span>₺ 1.500,00</span>
+                        </div>
+                        <div class="item-row">
+                            <span><strong>Ürün 2</strong> <span class="text-muted">(1 adet)</span></span>
+                            <span>₺ 2.250,00</span>
+                        </div>
+                        <div class="item-row">
+                            <span><strong>Ürün 3</strong> <span class="text-muted">(3 adet)</span></span>
+                            <span>₺ 4.200,00</span>
+                        </div>
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Ürün adı">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" placeholder="Adet">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" placeholder="Birim fiyat">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- 5. Arızalı Ürünler & Teknik Destek -->
-        <a href="https://makerpazarsistem.github.io/Servisbarkod/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #b91c1c;"></div>
-            <span class="module-number">#5</span>
-            <div class="icon-bg" style="color: #b91c1c; background:#fee9e9;">
-                <i class="fas fa-microchip"></i>
-            </div>
-            <div class="module-title">Arızalı Ürünler & Teknik Destek</div>
-            <div class="module-desc">
-                Arızalı ürün kayıtları, teknik servis talepleri ve takip süreçlerini yönetin.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+                <!-- Toplam -->
+                <div class="col-12">
+                    <div class="total-box">
+                        <span class="text-muted" style="font-weight:400;">Toplam Tutar:</span>
+                        ₺ 7.950,00
+                    </div>
+                </div>
 
-        <!-- 6. KA Etiket Sistemi -->
-        <a href="https://makerpazarsistem.github.io/Kaetiketi/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #8b5cf6;"></div>
-            <span class="module-number">#6</span>
-            <div class="icon-bg" style="color: #8b5cf6; background:#f3e8ff;">
-                <i class="fas fa-tag"></i>
+                <!-- Butonlar -->
+                <div class="col-12">
+                    <div class="d-flex gap-3 justify-content-end flex-wrap">
+                        <button class="btn btn-success btn-lg">
+                            <i class="fas fa-file-pdf me-2"></i> PDF Olarak Kaydet
+                        </button>
+                        <button class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i> Kaydet
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-print me-2"></i> Yazdır
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="module-title">KA Etiket Sistemi</div>
-            <div class="module-desc">
-                4x4 inç (10x10 cm) etiketler için KA kodu, isim soyisim, not bölümü ve barkodlu etiket oluşturun. Zebra yazıcı uyumlu.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
 
-        <!-- 7. Numune Ürün Etiketi -->
-        <a href="https://makerpazarsistem.github.io/Numuneetiket/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #d97706;"></div>
-            <span class="module-number">#7</span>
-            <div class="icon-bg" style="color: #d97706; background:#fef3c7;">
-                <i class="fas fa-flask"></i>
-            </div>
-            <div class="module-title">Numune Ürün Etiketi</div>
-            <div class="module-desc">
-                Numune ürünler için etiket oluşturma ve yönetim modülü. Ürün bilgilerini hızlıca etiketleyin.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
+        </div>
 
-        <!-- 8. Cari Sistemi -->
-        <a href="https://makerpazarsistem.github.io/cari/" class="module-card" target="_blank" rel="noopener noreferrer">
-            <div class="card-accent" style="background: #0b6e4f;"></div>
-            <span class="module-number">#8</span>
-            <div class="icon-bg" style="color: #0b6e4f; background:#e0f2e9;">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="module-title">Cari Sistemi</div>
-            <div class="module-desc">
-                Cari hesaplar, müşteri yönetimi ve finansal takip için özel modül.
-            </div>
-            <div class="link-hint">
-                <span>Sisteme git</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-    </div>
-</div>
-
-<div class="footer">
-    © 2025 — Kurumsal İç Yönlendirme Sistemi | 8 modül aktif • Tüm hakları saklıdır
-</div>
-
-<!-- Şifre Modalı -->
-<div class="password-overlay" id="passwordOverlay">
-    <div class="password-box">
-        <img src="logo.png" alt="Şirket Logosu" class="modal-logo">
-        <h2>Güvenli Giriş</h2>
-        <p class="modal-sub">Bu panele erişmek için şifreyi girin.</p>
-        <div class="password-input-group">
-            <input type="password" id="passwordInput" placeholder="••••" maxlength="10" autofocus>
-            <div class="error-msg" id="errorMsg"></div>
-            <button id="unlockBtn">Giriş Yap</button>
+        <div class="panel-footer">
+            © 2025 — Kurumsal İç Sistem | Fiyat Teklif Formu
         </div>
     </div>
-</div>
 
-<script>
-    (function() {
-        // Şifre ve mesaj eşleştirmeleri
-        const USER_MAP = {
-            '6026': { name: 'Yasin', greeting: 'Merhaba Yasin! 👋' },
-            '4256': { name: 'Mustafa', greeting: 'Merhaba Mustafa! 👋' }
-        };
-
-        const overlay = document.getElementById('passwordOverlay');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorMsg = document.getElementById('errorMsg');
-        const unlockBtn = document.getElementById('unlockBtn');
-        const cards = document.querySelectorAll('.module-card');
-        const welcomeBanner = document.getElementById('welcomeBanner');
-        const welcomeText = document.getElementById('welcomeText');
-        const welcomeSub = document.getElementById('welcomeSub');
-
-        // Başlangıçta tüm kartlar pasif
-        cards.forEach(card => card.classList.remove('active'));
-        welcomeBanner.style.display = 'none';
-
-        function unlockSystem() {
-            const entered = passwordInput.value.trim();
-            
-            const user = USER_MAP[entered];
-            
-            if (user) {
-                overlay.classList.add('hidden');
-                cards.forEach(card => card.classList.add('active'));
-                errorMsg.textContent = '';
-                passwordInput.value = '';
-                
-                welcomeBanner.style.display = 'flex';
-                welcomeText.textContent = user.greeting;
-                welcomeSub.textContent = `Hoş geldin ${user.name}! Tüm modüllere erişebilirsin.`;
-                
-                console.log(`✅ ${user.name} giriş yaptı. Paneli açıldı.`);
-            } else {
-                errorMsg.textContent = '❌ Geçersiz şifre, tekrar deneyin.';
-                passwordInput.value = '';
-                passwordInput.focus();
-                passwordInput.style.borderColor = '#dc2626';
-                setTimeout(() => {
-                    passwordInput.style.borderColor = '#e2e8f0';
-                }, 600);
-                console.warn('⚠️ Geçersiz şifre denemesi.');
-            }
-        }
-
-        unlockBtn.addEventListener('click', unlockSystem);
-        passwordInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                unlockSystem();
-            }
-        });
-
-        window.addEventListener('load', () => {
-            setTimeout(() => passwordInput.focus(), 100);
-        });
-
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                passwordInput.focus();
-            }
-        });
-
-        console.log('🔐 Sistem kilitli. Şifre giriniz. (6026 = Yasin, 4256 = Mustafa)');
-        console.log('📁 Logo dosyası: logo.png (aynı klasörde olmalı)');
-        console.log('📋 Modül sıralaması: 1.Ürün Bekleme, 2.Gelir/Gider, 3.Ürün Seri, 4.Mağaza Barkod, 5.Arızalı Ürün, 6.KA Etiket, 7.Numune Etiket, 8.Cari Sistemi');
-    })();
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
