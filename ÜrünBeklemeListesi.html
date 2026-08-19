@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Bildirim Sistemi</title>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, updateDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        
+        // Firebase yapılandırmanız
+      const firebaseConfig = {
+  apiKey: "AIzaSyCPPPpJfGKxA5ImoV6Gkl2BXuQR5sYa2Oc",
+  authDomain: "stok-bildirim-sistemi.firebaseapp.com",
+  databaseURL: "https://stok-bildirim-sistemi-default-rtdb.firebaseio.com",
+  projectId: "stok-bildirim-sistemi",
+  storageBucket: "stok-bildirim-sistemi.firebasestorage.app",
+  messagingSenderId: "844636841864",
+  appId: "1:844636841864:web:46fd62183a60097d94fc3d"
+};
+        
+        // Firebase'i başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Global değişkenlere atama
+        window.firebaseDb = db;
+        window.firebaseModules = { collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, updateDoc };
+        
+        console.log("Firebase başarıyla başlatıldı");
+        document.getElementById('firebaseStatus').textContent = "✓ Firebase bağlantısı başarılı";
+        document.getElementById('firebaseStatus').className = "status success";
+        
+        // Sayfa yüklendiğinde müşterileri getir
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.loadCustomers) {
+                window.loadCustomers();
+            }
+        });
+    </script>
+    <!-- SheetJS (Excel işlemleri için) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-content {
+            flex: 1;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .excel-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .excel-btn:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .excel-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-section, .list-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .list-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s;
+            background-color: white;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .add-btn {
+            background-color: #2ecc71;
+            color: white;
+            flex: 2;
+        }
+        
+        .add-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .add-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .clear-btn {
+            background-color: #e74c3c;
+            color: white;
+            flex: 1;
+        }
+        
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding-left: 45px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23757575" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 15px center;
+        }
+        
+        .customer-list {
+            flex: 1;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .customer-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s;
+        }
+        
+        .customer-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .customer-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        
+        .customer-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .status-select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.8rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .status-select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .status-bekliyor {
+            background-color: #f39c12;
+            color: #fff;
+        }
+        
+        .status-geldi {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        
+        .status-arandi {
+            background-color: #3498db;
+            color: #fff;
+        }
+        
+        .customer-phone, .customer-email, .customer-note {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .customer-phone i, .customer-email i, .customer-note i {
+            color: #3498db;
+            width: 18px;
+        }
+        
+        .customer-note {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .empty-list {
+            text-align: center;
+            padding: 30px 15px;
+            color: #7f8c8d;
+        }
+        
+        .empty-list i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #bdc3c7;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .customer-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .customer-actions {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-boxes"></i> Stok Bildirim Sistemi</h1>
+                <p class="subtitle">Stokta olmayan ürünler için müşteri bilgilerini kaydedin, ürün geldiğinde kolayca ulaşın.</p>
+            </div>
+            <div class="header-buttons">
+                <button class="excel-btn" id="excelButton">
+                    <i class="fas fa-file-excel"></i> Excel'e Aktar
+                </button>
+            </div>
+        </header>
+        
+        <div class="status info" id="firebaseStatus">
+            <i class="fas fa-sync fa-spin"></i> Firebase bağlantısı kuruluyor...
+        </div>
+        
+        <div class="status" id="statusMessage" style="display:none;"></div>
+        
+        <div class="main-content">
+            <section class="form-section">
+                <h2 class="section-title"><i class="fas fa-user-plus"></i> Müşteri Ekle</h2>
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label for="customerName">Müşteri Adı Soyadı *</label>
+                        <input type="text" id="customerName" placeholder="Ad Soyad" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerPhone">Telefon Numarası *</label>
+                        <input type="tel" id="customerPhone" placeholder="(555) 123 45 67" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerEmail">E-posta Adresi</label>
+                        <input type="email" id="customerEmail" placeholder="email@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerNote">Not / İstenen Ürün *</label>
+                        <textarea id="customerNote" placeholder="Müşterinin istediği ürün, miktar, ek bilgiler..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerStatus">Durum</label>
+                        <select id="customerStatus">
+                            <option value="bekliyor">Ürün Bekleniyor</option>
+                            <option value="geldi">Ürün Geldi</option>
+                            <option value="arandi">Arandı</option>
+                        </select>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button type="submit" class="add-btn" id="addButton">
+                            <i class="fas fa-plus-circle"></i> Müşteri Ekle
+                        </button>
+                        <button type="button" class="clear-btn" id="clearButton">
+                            <i class="fas fa-eraser"></i> Temizle
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="list-section">
+                <h2 class="section-title"><i class="fas fa-list"></i> Bekleyen Müşteriler</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Müşteri adı, telefon veya not ile arama...">
+                    <button type="button" id="searchButton" style="padding: 0 15px;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="customer-list" id="customerList">
+                    <div class="empty-list">
+                        <i class="fas fa-users"></i>
+                        <p>Müşteri listesi yükleniyor...</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalCustomers">0</div>
+                        <div class="stat-label">Toplam Müşteri</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="todayCustomers">0</div>
+                        <div class="stat-label">Bugün Eklenen</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="searchResults">0</div>
+                        <div class="stat-label">Arama Sonucu</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statusStats"></div>
+                        <div class="stat-label">Durum</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Stok Bildirim Sistemi &copy; 2024 - Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ==================== DOM ELEMENTLERİ ====================
+        const customerForm = document.getElementById('customerForm');
+        const customerName = document.getElementById('customerName');
+        const customerPhone = document.getElementById('customerPhone');
+        const customerEmail = document.getElementById('customerEmail');
+        const customerNote = document.getElementById('customerNote');
+        const customerStatus = document.getElementById('customerStatus');
+        const addButton = document.getElementById('addButton');
+        const clearButton = document.getElementById('clearButton');
+        const customerList = document.getElementById('customerList');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const excelButton = document.getElementById('excelButton');
+        const totalCustomersEl = document.getElementById('totalCustomers');
+        const todayCustomersEl = document.getElementById('todayCustomers');
+        const searchResultsEl = document.getElementById('searchResults');
+        const statusStatsEl = document.getElementById('statusStats');
+        
+        // Global müşteri listesi
+        let allCustomers = [];
+        let filteredCustomers = [];
+        
+        // ==================== DURUM ETİKETLERİ ====================
+        const statusLabelMap = {
+            'bekliyor': 'Ürün Bekleniyor',
+            'geldi': 'Ürün Geldi',
+            'arandi': 'Arandı'
+        };
+        
+        // ==================== DURUM MESAJI GÖSTERME ====================
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = 'status ' + type;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        // ==================== MÜŞTERİ EKLEME ====================
+        customerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!window.firebaseDb) {
+                showStatus("Firebase bağlantısı kurulmamış. Lütfen bekleyin...", "error");
+                return;
+            }
+            
+            const name = customerName.value.trim();
+            const phone = customerPhone.value.trim();
+            const email = customerEmail.value.trim();
+            const note = customerNote.value.trim();
+            const status = customerStatus.value;
+            
+            if (!name || !phone || !note) {
+                showStatus("Lütfen zorunlu alanları doldurun (Ad, Telefon, Not).", "error");
+                return;
+            }
+            
+            addButton.disabled = true;
+            addButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ekleniyor...';
+            
+            // Sadece temel alanları gönder - statusLabel'i sonradan ekleyelim
+            const customerData = {
+                name: name,
+                phone: phone,
+                email: email || '',
+                note: note,
+                status: status,
+                createdAt: new Date().toISOString(),
+                addedDate: new Date().toLocaleDateString('tr-TR')
+            };
+            
+            try {
+                const { collection, addDoc } = window.firebaseModules;
+                const docRef = await addDoc(collection(window.firebaseDb, "customers"), customerData);
+                
+                // Başarılı oldu, şimdi statusLabel'i güncelle
+                const { doc, updateDoc } = window.firebaseModules;
+                await updateDoc(doc(window.firebaseDb, "customers", docRef.id), {
+                    statusLabel: statusLabelMap[status] || 'Ürün Bekleniyor'
+                });
+                
+                showStatus(`${name} başarıyla eklendi!`, "success");
+                customerForm.reset();
+                // Durum seçeneğini varsayılana döndür
+                customerStatus.value = 'bekliyor';
+                await loadCustomers();
+            } catch (error) {
+                console.error("Müşteri eklenirken hata:", error);
+                showStatus("Müşteri eklenirken bir hata oluştu: " + error.message, "error");
+            } finally {
+                addButton.disabled = false;
+                addButton.innerHTML = '<i class="fas fa-plus-circle"></i> Müşteri Ekle';
+            }
+        });
+        
+        // ==================== FORM TEMİZLEME ====================
+        clearButton.addEventListener('click', () => {
+            customerForm.reset();
+            customerStatus.value = 'bekliyor';
+            showStatus("Form temizlendi.", "success");
+        });
+        
+        // ==================== MÜŞTERİLERİ YÜKLEME ====================
+        async function loadCustomers(searchTerm = '') {
+            if (!window.firebaseDb) {
+                customerList.innerHTML = `
+                    <div class="empty-list">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Firebase bağlantısı kurulmamış. Lütfen bekleyin...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const { collection, getDocs, query, orderBy } = window.firebaseModules;
+                const q = query(collection(window.firebaseDb, "customers"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                allCustomers = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const customer = { 
+                        id: doc.id, 
+                        ...data,
+                        formattedDate: formatDate(data.createdAt),
+                        statusLabel: data.statusLabel || statusLabelMap[data.status] || 'Ürün Bekleniyor'
+                    };
+                    allCustomers.push(customer);
+                });
+                
+                updateStats(allCustomers);
+                
+                filteredCustomers = allCustomers;
+                if (searchTerm) {
+                    const lowerSearchTerm = searchTerm.toLowerCase();
+                    filteredCustomers = allCustomers.filter(customer => 
+                        customer.name.toLowerCase().includes(lowerSearchTerm) ||
+                        customer.phone.toLowerCase().includes(lowerSearchTerm) ||
+                        (customer.note && customer.note.toLowerCase().includes(lowerSearchTerm)) ||
+                        (customer.email && customer.email.toLowerCase().includes(lowerSearchTerm))
+                    );
+                }
+                
+                searchResultsEl.textContent = filteredCustomers.length;
+                renderCustomerList(filteredCustomers);
+                excelButton.disabled = filteredCustomers.length === 0;
+                
+            } catch (error) {
+                console.error("Müşteriler yüklenirken hata:", error);
+                customerList.innerHTML = `
+                    <div class="empty-list">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Müşteriler yüklenirken hata oluştu: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // ==================== MÜŞTERİ LİSTESİNİ OLUŞTURMA ====================
+        function renderCustomerList(customers) {
+            if (customers.length === 0) {
+                customerList.innerHTML = `
+                    <div class="empty-list">
+                        <i class="fas fa-search"></i>
+                        <p>${searchInput.value ? `'${searchInput.value}' ile eşleşen müşteri bulunamadı.` : 'Henüz müşteri eklenmemiş.'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            customers.forEach(customer => {
+                const statusClass = 'status-' + (customer.status || 'bekliyor');
+                const statusDisplay = customer.statusLabel || statusLabelMap[customer.status] || 'Ürün Bekleniyor';
+                
+                html += `
+                    <div class="customer-item" data-id="${customer.id}">
+                        <div class="customer-header">
+                            <div class="customer-name">${customer.name || 'İsimsiz'}</div>
+                            <div class="customer-actions">
+                                <span class="status-badge ${statusClass}">${statusDisplay}</span>
+                                <select class="status-select" onchange="updateCustomerStatus('${customer.id}', this.value)">
+                                    <option value="bekliyor" ${customer.status === 'bekliyor' ? 'selected' : ''}>Ürün Bekleniyor</option>
+                                    <option value="geldi" ${customer.status === 'geldi' ? 'selected' : ''}>Ürün Geldi</option>
+                                    <option value="arandi" ${customer.status === 'arandi' ? 'selected' : ''}>Arandı</option>
+                                </select>
+                                <button class="delete-btn" onclick="deleteCustomer('${customer.id}')">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </div>
+                        </div>
+                        <div class="customer-phone">
+                            <i class="fas fa-phone"></i>
+                            <span>${customer.phone || 'Telefon yok'}</span>
+                        </div>
+                        ${customer.email ? `
+                        <div class="customer-email">
+                            <i class="fas fa-envelope"></i>
+                            <span>${customer.email}</span>
+                        </div>
+                        ` : ''}
+                        <div class="customer-note">
+                            <i class="fas fa-sticky-note"></i>
+                            <span>${customer.note || 'Not eklenmemiş'}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #7f8c8d; margin-top: 8px;">
+                            <i class="far fa-clock"></i> ${customer.formattedDate || 'Tarih yok'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            customerList.innerHTML = html;
+        }
+        
+        // ==================== DURUM GÜNCELLEME ====================
+        window.updateCustomerStatus = async function(id, newStatus) {
+            if (!window.firebaseDb) {
+                showStatus("Firebase bağlantısı kurulmamış.", "error");
+                return;
+            }
+            
+            try {
+                const { doc, updateDoc } = window.firebaseModules;
+                await updateDoc(doc(window.firebaseDb, "customers", id), {
+                    status: newStatus,
+                    statusLabel: statusLabelMap[newStatus] || 'Ürün Bekleniyor'
+                });
+                
+                showStatus(`Durum "${statusLabelMap[newStatus]}" olarak güncellendi.`, "success");
+                loadCustomers(searchInput.value);
+            } catch (error) {
+                console.error("Durum güncellenirken hata:", error);
+                showStatus("Durum güncellenirken bir hata oluştu: " + error.message, "error");
+            }
+        };
+        
+        // ==================== TARİH FORMATLAMA ====================
+        function formatDate(dateString) {
+            if (!dateString) return 'Tarih yok';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (error) {
+                return 'Tarih yok';
+            }
+        }
+        
+        // ==================== İSTATİSTİKLERİ GÜNCELLE ====================
+        function updateStats(customers) {
+            totalCustomersEl.textContent = customers.length;
+            
+            const today = new Date().toLocaleDateString('tr-TR');
+            const todayCount = customers.filter(c => 
+                c.addedDate === today || 
+                (c.createdAt && new Date(c.createdAt).toLocaleDateString('tr-TR') === today)
+            ).length;
+            todayCustomersEl.textContent = todayCount;
+            
+            // Durum istatistikleri
+            const statusCounts = {};
+            customers.forEach(c => {
+                const key = c.status || 'bekliyor';
+                statusCounts[key] = (statusCounts[key] || 0) + 1;
+            });
+            
+            let statusText = '';
+            const statusMap = {
+                'bekliyor': '🟡 Bekleyen',
+                'geldi': '🟢 Geldi',
+                'arandi': '🔵 Arandı'
+            };
+            const parts = [];
+            for (const [key, label] of Object.entries(statusMap)) {
+                if (statusCounts[key]) {
+                    parts.push(`${label}: ${statusCounts[key]}`);
+                }
+            }
+            statusStatsEl.textContent = parts.join(' | ') || 'Henüz veri yok';
+        }
+        
+        // ==================== MÜŞTERİ SİLME ====================
+        window.deleteCustomer = async function(id) {
+            if (!window.firebaseDb) {
+                showStatus("Firebase bağlantısı kurulmamış.", "error");
+                return;
+            }
+            
+            if (confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
+                try {
+                    const { doc, deleteDoc } = window.firebaseModules;
+                    await deleteDoc(doc(window.firebaseDb, "customers", id));
+                    showStatus("Müşteri başarıyla silindi.", "success");
+                    loadCustomers(searchInput.value);
+                } catch (error) {
+                    console.error("Müşteri silinirken hata:", error);
+                    showStatus("Müşteri silinirken bir hata oluştu: " + error.message, "error");
+                }
+            }
+        };
+        
+        // ==================== ARAMA İŞLEVİ ====================
+        let searchTimeout;
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            loadCustomers(searchTerm);
+        }
+        
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(performSearch, 300);
+        });
+        
+        searchButton.addEventListener('click', performSearch);
+        
+        // ==================== EXCEL İNDİRME ====================
+        excelButton.addEventListener('click', function() {
+            if (filteredCustomers.length === 0) {
+                showStatus("Excel'e aktarılacak müşteri bulunamadı.", "error");
+                return;
+            }
+            
+            try {
+                excelButton.disabled = true;
+                excelButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+                
+                const excelData = filteredCustomers.map(customer => ({
+                    'ID': customer.id,
+                    'Ad Soyad': customer.name || '',
+                    'Telefon': customer.phone || '',
+                    'E-posta': customer.email || '',
+                    'Not / İstenen Ürün': customer.note || '',
+                    'Durum': customer.statusLabel || statusLabelMap[customer.status] || 'Ürün Bekleniyor',
+                    'Eklenme Tarihi': customer.formattedDate || '',
+                    'Kayıt Tarihi': customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('tr-TR') : ''
+                }));
+                
+                const worksheet = XLSX.utils.json_to_sheet(excelData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Müşteriler");
+                
+                worksheet['!cols'] = [
+                    { wch: 30 }, { wch: 25 }, { wch: 20 }, { wch: 30 },
+                    { wch: 50 }, { wch: 20 }, { wch: 25 }, { wch: 15 }
+                ];
+                
+                XLSX.writeFile(workbook, `stok_musterileri_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                showStatus(`${filteredCustomers.length} müşteri Excel dosyasına aktarıldı.`, "success");
+                
+            } catch (error) {
+                console.error("Excel oluşturulurken hata:", error);
+                showStatus("Excel dosyası oluşturulurken hata oluştu: " + error.message, "error");
+            } finally {
+                setTimeout(() => {
+                    excelButton.disabled = filteredCustomers.length === 0;
+                    excelButton.innerHTML = '<i class="fas fa-file-excel"></i> Excel\'e Aktar';
+                }, 1000);
+            }
+        });
+        
+        // ==================== SAYFA YÜKLENDİĞİNDE ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            clearButton.addEventListener('click', () => {
+                customerForm.reset();
+                customerStatus.value = 'bekliyor';
+                showStatus("Form temizlendi.", "success");
+            });
+            
+            setTimeout(() => {
+                if (window.firebaseDb) {
+                    loadCustomers();
+                }
+            }, 3000);
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
