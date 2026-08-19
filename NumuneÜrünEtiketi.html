@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filament Etiket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #e6e9ef;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            background: white;
+            padding: 18px 12px 22px 12px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        h2 {
+            color: #1e2a3a;
+            font-size: 22px;
+            margin: 0;
+        }
+        .secenek {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .secenek label {
+            font-weight: 600;
+            color: #1e2a3a;
+            font-size: 15px;
+        }
+        .secenek select {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #2b7be4;
+            background: white;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2a3a;
+            cursor: pointer;
+            outline: none;
+        }
+        .secenek select:focus {
+            box-shadow: 0 0 0 3px rgba(43, 123, 228, 0.2);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .grid.tekli {
+            grid-template-columns: 1fr;
+        }
+        .grid.ikili {
+            grid-template-columns: 1fr 1fr;
+        }
+        .grid.dortlu {
+            grid-template-columns: 1fr 1fr;
+        }
+        .etiket-kart {
+            background: #f8faff;
+            border: 2px dashed #2b7be4;
+            border-radius: 12px;
+            padding: 18px 12px;
+            text-align: center;
+            min-height: 155px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+        .grid.tekli .etiket-kart {
+            min-height: 400px;
+            padding: 40px 20px;
+        }
+        .grid.tekli .etiket-kart input {
+            font-size: 32px;
+            padding: 20px 16px;
+        }
+        .grid.ikili .etiket-kart {
+            min-height: 250px;
+            padding: 24px 16px;
+        }
+        .grid.ikili .etiket-kart input {
+            font-size: 22px;
+            padding: 16px 12px;
+        }
+        .grid.dortlu .etiket-kart {
+            min-height: 200px;
+            padding: 20px 14px;
+        }
+        .grid.dortlu .etiket-kart input {
+            font-size: 20px;
+            padding: 14px 12px;
+        }
+        .etiket-kart input {
+            width: 100%;
+            padding: 14px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            background: white;
+            font-weight: 500;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .etiket-kart input:focus {
+            border-color: #2b7be4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(43, 123, 228, 0.2);
+        }
+        .etiket-kart input::placeholder {
+            font-weight: 400;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+        .grid.tekli .etiket-kart input::placeholder {
+            font-size: 20px;
+        }
+        .grid.ikili .etiket-kart input::placeholder {
+            font-size: 16px;
+        }
+        .grid.dortlu .etiket-kart input::placeholder {
+            font-size: 15px;
+        }
+        .butonlar {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .buton {
+            background: #1e2a3a;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .buton:hover {
+            transform: scale(1.03);
+            background: #2b3b4f;
+        }
+        .buton.yazdir {
+            background: #0a7e3d;
+        }
+        .buton.yazdir:hover {
+            background: #0d9e4b;
+        }
+        .buton.temizle {
+            background: #b91c1c;
+        }
+        .buton.temizle:hover {
+            background: #d42a2a;
+        }
+        .uyari {
+            margin-top: 18px;
+            background: #fef9e7;
+            border-left: 5px solid #f59e0b;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4b3a0a;
+        }
+
+        /* ========== YAZDIRMA ========== */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+            .container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 8px !important;
+                max-width: 100% !important;
+            }
+            .butonlar, .uyari, .header h2, .secenek {
+                display: none !important;
+            }
+            .grid {
+                gap: 8px !important;
+            }
+            .grid.tekli .etiket-kart {
+                min-height: 100vh !important;
+                padding: 40px 20px !important;
+                border: 2px solid #000 !important;
+            }
+            .grid.tekli .etiket-kart input {
+                font-size: 48px !important;
+                padding: 20px !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            .grid.ikili .etiket-kart {
+                min-height: 200px !important;
+                padding: 16px 12px !important;
+            }
+            .grid.ikili .etiket-kart input {
+                font-size: 18px !important;
+                padding: 8px !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            .grid.dortlu .etiket-kart {
+                min-height: 150px !important;
+                padding: 12px 8px !important;
+            }
+            .grid.dortlu .etiket-kart input {
+                font-size: 16px !important;
+                padding: 6px !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            .etiket-kart {
+                border: 1.5px solid #000 !important;
+                background: white !important;
+            }
+            .etiket-kart input {
+                border: none !important;
+                background: transparent !important;
+                font-weight: 600;
+            }
+            .etiket-kart input::placeholder {
+                color: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>🏷️ Filament Etiket</h2>
+        <div class="secenek">
+            <label for="adetSec">Adet:</label>
+            <select id="adetSec" onchange="degistir()">
+                <option value="1">1 (Tam Sayfa)</option>
+                <option value="2">2 (Yan Yana)</option>
+                <option value="4">4 (2x2)</option>
+                <option value="12" selected>12 (3x4)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="print-alani">
+        <div class="grid" id="etiketGrid"></div>
+    </div>
+
+    <div class="butonlar">
+        <button class="buton yazdir" onclick="yazdir()">🖨️ Yazdır</button>
+        <button class="buton temizle" onclick="temizle()">🗑️ Tümünü Temizle</button>
+    </div>
+
+    <div class="uyari">
+        ⚠️ <strong>Yazdırma ipucu:</strong> Yazdır butonuna basıp Zebra yazıcını seç. Kağıt boyutunu <strong>4x4 etiket</strong> olarak ayarla.
+    </div>
+</div>
+
+<script>
+    let mevcutAdet = 12;
+
+    function etiketOlustur(index) {
+        const div = document.createElement('div');
+        div.className = 'etiket-kart';
+        div.innerHTML = `
+            <input type="text" placeholder="Filament Adı" class="fila-ad">
+            <input type="text" placeholder="Türü" class="fila-tur">
+            <input type="text" placeholder="Rengi" class="fila-renk">
+        `;
+        return div;
+    }
+
+    function gridDoldur(adet) {
+        const grid = document.getElementById('etiketGrid');
+        grid.innerHTML = '';
+        grid.className = 'grid';
+        
+        if (adet === 1) {
+            grid.classList.add('tekli');
+        } else if (adet === 2) {
+            grid.classList.add('ikili');
+        } else if (adet === 4) {
+            grid.classList.add('dortlu');
+        }
+        // 12'lik için özel class gerekmez, varsayılan 3 sütun
+        
+        for (let i = 0; i < adet; i++) {
+            grid.appendChild(etiketOlustur(i));
+        }
+    }
+
+    function degistir() {
+        const secim = document.getElementById('adetSec').value;
+        mevcutAdet = parseInt(secim);
+        gridDoldur(mevcutAdet);
+    }
+
+    function yazdir() {
+        window.print();
+    }
+
+    function temizle() {
+        document.querySelectorAll('.fila-ad, .fila-tur, .fila-renk').forEach(inp => inp.value = '');
+    }
+
+    // Sayfa açılınca 12'li olarak başla
+    gridDoldur(12);
+</script>
+
+</body>
+</html>
