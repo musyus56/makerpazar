@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Kurumsal İç Sistem | Operasyon Paneli</title>
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #f4f6fa;
@@ -16,6 +23,8 @@
             display: flex;
             flex-direction: column;
         }
+
+        /* Üst Bar */
         .navbar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
@@ -30,17 +39,20 @@
             z-index: 10;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
+
         .logo-area {
             display: flex;
             align-items: center;
             gap: 12px;
         }
+
         .logo-img {
             height: 44px;
             width: auto;
             border-radius: 6px;
             object-fit: contain;
         }
+
         .logo-text {
             font-weight: 700;
             font-size: 1.3rem;
@@ -50,6 +62,7 @@
             background-clip: text;
             color: transparent;
         }
+
         .badge {
             background: #eef2ff;
             padding: 0.3rem 0.8rem;
@@ -58,6 +71,8 @@
             font-weight: 500;
             color: #1e40af;
         }
+
+        /* Hoş Geldin Mesajı */
         .welcome-banner {
             background: linear-gradient(135deg, #f8fafc, #eef2ff);
             border-radius: 16px;
@@ -70,6 +85,7 @@
             flex-wrap: wrap;
             min-height: 60px;
         }
+
         .welcome-banner i {
             font-size: 1.8rem;
             color: #0a66c2;
@@ -78,28 +94,35 @@
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
+
         .welcome-banner .welcome-text {
             font-size: 1.1rem;
             font-weight: 500;
             color: #0f172a;
         }
+
         .welcome-banner .welcome-sub {
             font-size: 0.85rem;
             color: #475569;
             margin-left: auto;
         }
+
+        /* Ana içerik */
         .container {
             max-width: 1400px;
             margin: 1.5rem auto;
             padding: 0 1.5rem;
             flex: 1;
         }
+
+        /* Grid sistem - 8 kart */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.8rem;
             margin-bottom: 2rem;
         }
+
         .module-card {
             background: white;
             border-radius: 20px;
@@ -118,16 +141,20 @@
             opacity: 0.6;
             filter: grayscale(0.4);
         }
+
         .module-card.active {
             pointer-events: auto;
             opacity: 1;
             filter: grayscale(0);
         }
+
         .module-card.active:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
             border-color: #cbd5e1;
         }
+
+        /* Renkli üst çizgi */
         .card-accent {
             position: absolute;
             top: 0;
@@ -135,6 +162,7 @@
             width: 100%;
             height: 5px;
         }
+
         .icon-bg {
             width: 56px;
             height: 56px;
@@ -146,12 +174,14 @@
             margin-bottom: 1.2rem;
             font-size: 1.8rem;
         }
+
         .module-title {
             font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             line-height: 1.3;
         }
+
         .module-desc {
             color: #475569;
             font-size: 0.8rem;
@@ -159,6 +189,7 @@
             margin-bottom: 1.2rem;
             flex: 1;
         }
+
         .link-hint {
             display: flex;
             align-items: center;
@@ -168,12 +199,15 @@
             color: #0a66c2;
             margin-top: auto;
         }
+
         .link-hint i {
             transition: transform 0.2s;
         }
+
         .module-card.active:hover .link-hint i {
             transform: translateX(4px);
         }
+
         .module-number {
             position: absolute;
             top: 12px;
@@ -185,6 +219,8 @@
             padding: 0.15rem 0.6rem;
             border-radius: 30px;
         }
+
+        /* Şifre modal */
         .password-overlay {
             position: fixed;
             top: 0;
@@ -199,10 +235,12 @@
             z-index: 999;
             transition: opacity 0.3s ease;
         }
+
         .password-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
+
         .password-box {
             background: white;
             padding: 2.5rem 2.2rem;
@@ -213,32 +251,38 @@
             box-shadow: 0 30px 50px rgba(0,0,0,0.2);
             animation: fadeUp 0.3s ease;
         }
+
         @keyframes fadeUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
         .password-box .modal-logo {
             height: 70px;
             width: auto;
             margin-bottom: 0.5rem;
             object-fit: contain;
         }
+
         .password-box h2 {
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 0.3rem;
             color: #0f172a;
         }
+
         .password-box .modal-sub {
             color: #64748b;
             font-size: 0.9rem;
             margin-bottom: 1.8rem;
         }
+
         .password-input-group {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
+
         .password-box input {
             padding: 0.9rem 1.2rem;
             border: 2px solid #e2e8f0;
@@ -250,15 +294,18 @@
             letter-spacing: 4px;
             font-weight: 600;
         }
+
         .password-box input:focus {
             border-color: #0a66c2;
         }
+
         .password-box .error-msg {
             color: #dc2626;
             font-size: 0.8rem;
             min-height: 1.5rem;
             margin-top: -0.2rem;
         }
+
         .password-box button {
             background: #0a66c2;
             color: white;
@@ -271,9 +318,12 @@
             transition: background 0.2s;
             width: 100%;
         }
+
         .password-box button:hover {
             background: #004182;
         }
+
+        /* Footer */
         .footer {
             border-top: 1px solid #e2e8f0;
             background: white;
@@ -283,30 +333,39 @@
             color: #64748b;
             margin-top: 1rem;
         }
-        .new-badge {
-            background: #ef4444;
-            color: white;
-            font-size: 0.55rem;
-            font-weight: 700;
-            padding: 0.1rem 0.5rem;
-            border-radius: 30px;
-            margin-left: 6px;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+
+        /* Responsive */
         @media (max-width: 700px) {
-            .navbar { padding: 0.8rem 1.2rem; }
-            .container { padding: 0 1rem; margin: 1rem auto; }
-            .module-title { font-size: 1rem; }
-            .password-box { padding: 2rem 1.5rem; }
-            .welcome-banner { flex-direction: column; align-items: flex-start; padding: 1rem; }
-            .welcome-banner .welcome-sub { margin-left: 0; }
-            .logo-img { height: 36px; }
-            .module-number { font-size: 0.6rem; top: 8px; right: 10px; padding: 0.1rem 0.5rem; }
+            .navbar {
+                padding: 0.8rem 1.2rem;
+            }
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            .module-title {
+                font-size: 1rem;
+            }
+            .password-box {
+                padding: 2rem 1.5rem;
+            }
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            .welcome-banner .welcome-sub {
+                margin-left: 0;
+            }
+            .logo-img {
+                height: 36px;
+            }
+            .module-number {
+                font-size: 0.6rem;
+                top: 8px;
+                right: 10px;
+                padding: 0.1rem 0.5rem;
+            }
         }
     </style>
 </head>
@@ -314,13 +373,15 @@
 
 <div class="navbar">
     <div class="logo-area">
+        <!-- ŞİRKET LOGOSU - logo.png dosyasını aynı klasöre koyun -->
         <img src="logo.png" alt="Şirket Logosu" class="logo-img">
         <div class="logo-text">Operasyon Portalı</div>
-        <div class="badge">9 Modül Aktif</div>
+        <div class="badge">8 Modül Aktif</div>
     </div>
 </div>
 
 <div class="container">
+    <!-- Hoş Geldin Banner - Başlangıçta gizli -->
     <div class="welcome-banner" id="welcomeBanner" style="display: none;">
         <i class="fas fa-hand-wave"></i>
         <span class="welcome-text" id="welcomeText">Hoş Geldiniz!</span>
@@ -330,7 +391,7 @@
     <div class="modules-grid">
         
         <!-- 1. Ürün Bekleme Listesi -->
-        <a href="ÜrünBeklemeListesi.html" class="module-card" target="_blank">
+        <a href="https://musyus56.github.io/maker-stok-ki-i/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #2b6e3c;"></div>
             <span class="module-number">#1</span>
             <div class="icon-bg" style="color: #2b6e3c; background:#e8f3e9;">
@@ -341,13 +402,13 @@
                 Stokta olmayan ürünler için müşteri bekleme listesi. Ürün geldiğinde müşteriye hızlıca ulaşın.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
         <!-- 2. Gelir & Gider Yönetimi -->
-        <a href="GelirGiderYönetimi.html" class="module-card" target="_blank">
+        <a href="https://musyus56.github.io/mkrkasa/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #059669;"></div>
             <span class="module-number">#2</span>
             <div class="icon-bg" style="color: #059669; background:#d1fae5;">
@@ -355,16 +416,16 @@
             </div>
             <div class="module-title">Gelir & Gider Yönetimi</div>
             <div class="module-desc">
-                Gelir ve giderleri kaydedin, müşteri bazlı takip yapın, havale alacak kişileri yönetin.
+                Gelir ve giderleri kaydedin, müşteri bazlı takip yapın, havale alacak kişileri ve hazır gider kalemlerini yönetin.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
         <!-- 3. Ürün Seri Numarası -->
-        <a href="ÜrünSeriNumarası.html" class="module-card" target="_blank">
+        <a href="https://musyus56.github.io/-r-n-seri/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #0891b2;"></div>
             <span class="module-number">#3</span>
             <div class="icon-bg" style="color: #0891b2; background:#e0f7fa;">
@@ -372,38 +433,18 @@
             </div>
             <div class="module-title">Ürün Seri Numarası</div>
             <div class="module-desc">
-                Müşteri, sipariş no, platform, cihaz ve ürün-seri bilgilerini tek bir yerden takip edin.
+                Müşteri, sipariş no, platform, cihaz ve ürün-seri bilgilerini tek bir yerden takip edin. Her kayıt ayrı bir etiket olarak listelenir.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <!-- 4. Fiyat Teklif Formu -->
-        <a href="FiyatTeklifFormu.html" class="module-card" target="_blank">
-            <div class="card-accent" style="background: #7c3aed;"></div>
-            <span class="module-number">#4</span>
-            <div class="icon-bg" style="color: #7c3aed; background:#ede9fe;">
-                <i class="fas fa-file-invoice"></i>
-            </div>
-            <div class="module-title">
-                Fiyat Teklif Formu
-                <span class="new-badge">Yeni</span>
-            </div>
-            <div class="module-desc">
-                Müşterilere hızlı fiyat teklifi oluşturun, ürün kalemlerini ekleyin ve PDF olarak dışa aktarın.
-            </div>
-            <div class="link-hint">
-                <span>Paneli Aç</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-
-        <!-- 5. Mağaza Teslim Barkod -->
-        <a href="MağazaTeslimBarkod.html" class="module-card" target="_blank">
+        <!-- 4. Mağaza Teslim Barkod -->
+        <a href="https://musyus56.github.io/makerbarkod/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #1e6f9f;"></div>
-            <span class="module-number">#5</span>
+            <span class="module-number">#4</span>
             <div class="icon-bg" style="color: #1e6f9f; background:#e6f2f9;">
                 <i class="fas fa-barcode"></i>
             </div>
@@ -412,15 +453,15 @@
                 Barkod talepleri, etiket basımı ve envanter listesi yönetimi için ilgili modüle erişin.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <!-- 6. Arızalı Ürünler & Teknik Destek -->
-        <a href="ArızalıÜrünlerTeknikDestek.html" class="module-card" target="_blank">
+        <!-- 5. Arızalı Ürünler & Teknik Destek -->
+        <a href="https://musyus56.github.io/maker-teknik-destek/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #b91c1c;"></div>
-            <span class="module-number">#6</span>
+            <span class="module-number">#5</span>
             <div class="icon-bg" style="color: #b91c1c; background:#fee9e9;">
                 <i class="fas fa-microchip"></i>
             </div>
@@ -429,32 +470,32 @@
                 Arızalı ürün kayıtları, teknik servis talepleri ve takip süreçlerini yönetin.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <!-- 7. KA Etiket Sistemi -->
-        <a href="KAEtiketSistemi.html" class="module-card" target="_blank">
+        <!-- 6. KA Etiket Sistemi -->
+        <a href="https://musyus56.github.io/kaetiket/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #8b5cf6;"></div>
-            <span class="module-number">#7</span>
+            <span class="module-number">#6</span>
             <div class="icon-bg" style="color: #8b5cf6; background:#f3e8ff;">
                 <i class="fas fa-tag"></i>
             </div>
             <div class="module-title">KA Etiket Sistemi</div>
             <div class="module-desc">
-                4x4 inç (10x10 cm) etiketler için KA kodu, isim soyisim, not bölümü ve barkodlu etiket oluşturun.
+                4x4 inç (10x10 cm) etiketler için KA kodu, isim soyisim, not bölümü ve barkodlu etiket oluşturun. Zebra yazıcı uyumlu.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <!-- 8. Numune Ürün Etiketi -->
-        <a href="NumuneÜrünEtiketi.html" class="module-card" target="_blank">
+        <!-- 7. Numune Ürün Etiketi -->
+        <a href="https://musyus56.github.io/maker/" class="module-card" target="_blank" rel="noopener noreferrer">
             <div class="card-accent" style="background: #d97706;"></div>
-            <span class="module-number">#8</span>
+            <span class="module-number">#7</span>
             <div class="icon-bg" style="color: #d97706; background:#fef3c7;">
                 <i class="fas fa-flask"></i>
             </div>
@@ -463,24 +504,24 @@
                 Numune ürünler için etiket oluşturma ve yönetim modülü. Ürün bilgilerini hızlıca etiketleyin.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <!-- 9. Cari Sistemi -->
-        <a href="CariSistemi.html" class="module-card" target="_blank">
-            <div class="card-accent" style="background: #0b6e4f;"></div>
-            <span class="module-number">#9</span>
-            <div class="icon-bg" style="color: #0b6e4f; background:#e0f2e9;">
-                <i class="fas fa-users"></i>
+        <!-- 8. Fiyat Teklif Formu (Cari Sistemi kaldırıldı, yerine eklendi) -->
+        <a href="https://makerpazarsistem.github.io/fiyatteklif/" class="module-card" target="_blank" rel="noopener noreferrer">
+            <div class="card-accent" style="background: #7c3aed;"></div>
+            <span class="module-number">#8</span>
+            <div class="icon-bg" style="color: #7c3aed; background:#ede9fe;">
+                <i class="fas fa-file-invoice"></i>
             </div>
-            <div class="module-title">Cari Sistemi</div>
+            <div class="module-title">Fiyat Teklif Formu</div>
             <div class="module-desc">
-                Cari hesaplar, müşteri yönetimi ve finansal takip için özel modül.
+                Müşterilere profesyonel fiyat teklifi oluşturun. Ürün kalemlerini ekleyin, tutarlar otomatik hesaplanır ve PDF olarak kaydedin.
             </div>
             <div class="link-hint">
-                <span>Paneli Aç</span>
+                <span>Sisteme git</span>
                 <i class="fas fa-arrow-right"></i>
             </div>
         </a>
@@ -488,7 +529,7 @@
 </div>
 
 <div class="footer">
-    © 2025 — Kurumsal İç Yönlendirme Sistemi | 9 modül aktif • Tüm hakları saklıdır
+    © 2025 — Kurumsal İç Yönlendirme Sistemi | 8 modül aktif • Tüm hakları saklıdır
 </div>
 
 <!-- Şifre Modalı -->
@@ -507,7 +548,7 @@
 
 <script>
     (function() {
-        // Şifre doğrulandığında sessionStorage'a kaydet
+        // Şifre ve mesaj eşleştirmeleri
         const USER_MAP = {
             '6026': { name: 'Yasin', greeting: 'Merhaba Yasin! 👋' },
             '4256': { name: 'Mustafa', greeting: 'Merhaba Mustafa! 👋' }
@@ -522,18 +563,16 @@
         const welcomeText = document.getElementById('welcomeText');
         const welcomeSub = document.getElementById('welcomeSub');
 
+        // Başlangıçta tüm kartlar pasif
         cards.forEach(card => card.classList.remove('active'));
         welcomeBanner.style.display = 'none';
 
         function unlockSystem() {
             const entered = passwordInput.value.trim();
+            
             const user = USER_MAP[entered];
             
             if (user) {
-                // SessionStorage'a kaydet - panel dosyaları kontrol edecek
-                sessionStorage.setItem('portal_authenticated', 'true');
-                sessionStorage.setItem('portal_user', user.name);
-                
                 overlay.classList.add('hidden');
                 cards.forEach(card => card.classList.add('active'));
                 errorMsg.textContent = '';
@@ -543,7 +582,7 @@
                 welcomeText.textContent = user.greeting;
                 welcomeSub.textContent = `Hoş geldin ${user.name}! Tüm modüllere erişebilirsin.`;
                 
-                console.log(`✅ ${user.name} giriş yaptı.`);
+                console.log(`✅ ${user.name} giriş yaptı. Paneli açıldı.`);
             } else {
                 errorMsg.textContent = '❌ Geçersiz şifre, tekrar deneyin.';
                 passwordInput.value = '';
@@ -566,9 +605,6 @@
 
         window.addEventListener('load', () => {
             setTimeout(() => passwordInput.focus(), 100);
-            // SessionStorage temizle (güvenlik için)
-            sessionStorage.removeItem('portal_authenticated');
-            sessionStorage.removeItem('portal_user');
         });
 
         overlay.addEventListener('click', (e) => {
@@ -578,8 +614,8 @@
         });
 
         console.log('🔐 Sistem kilitli. Şifre giriniz. (6026 = Yasin, 4256 = Mustafa)');
-        console.log('📁 9 modül aktif - Fiyat Teklif Formu #4 sırada.');
-        console.log('🔒 Doğrudan panel erişimi engellendi.');
+        console.log('📁 Logo dosyası: logo.png (aynı klasörde olmalı)');
+        console.log('📋 Modül sıralaması: 1.Ürün Bekleme, 2.Gelir/Gider, 3.Ürün Seri, 4.Mağaza Barkod, 5.Arızalı Ürün, 6.KA Etiket, 7.Numune Etiket, 8.Fiyat Teklif Formu');
     })();
 </script>
 
