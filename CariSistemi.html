@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baba Müşteri Takip Sistemi</title>
+    
+    <!-- Firebase SDK (CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js">
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-left: 6px solid #3498db;
+            padding-left: 15px;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-size: 15px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.3s;
+            background: #fafbfc;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .row-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .photo-upload-area {
+            border: 2px dashed #b0bec5;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+
+        .photo-upload-area:hover {
+            background: #eaf2f8;
+            border-color: #3498db;
+        }
+
+        .photo-upload-area img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .photo-upload-area .placeholder-text {
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+
+        .photo-upload-area .placeholder-text i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: #1a2a3a;
+            transform: scale(1.01);
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #1e8449;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+        .btn-warning:hover {
+            background: #d68910;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-info {
+            background: #3498db;
+        }
+        .btn-info:hover {
+            background: #2980b9;
+        }
+
+        .card-item {
+            background: #f8f9fa;
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            border-left: 6px solid #3498db;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: 0.3s;
+        }
+
+        .card-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-item .info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .card-item .info strong {
+            color: #2c3e50;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .card-item .info .field-row {
+            margin-bottom: 4px;
+        }
+
+        .card-item .product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+        }
+
+        .delete-btn,
+        .edit-photo-btn {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .edit-photo-btn {
+            background: #3498db;
+        }
+        .edit-photo-btn:hover {
+            background: #2980b9;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #95a5a6;
+            padding: 40px 10px;
+            font-size: 18px;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-actions .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .sync-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .sync-status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .sync-status.offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .sync-status.syncing {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, .1);
+            border-radius: 50%;
+            border-top-color: #3498db;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .row-2col,
+            .row-3col {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .container {
+                padding: 18px;
+            }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📋 Baba Cari & Ürün Kaydı</h1>
+
+        <div id="syncStatus" class="sync-status syncing">
+            <span class="loading-spinner"></span> Firebase Bağlanıyor...
+        </div>
+
+        <form id="customerForm">
+            <div class="row-2col">
+                <div class="form-group">
+                    <label>👤 Müşteri Adı / Cari Ünvan</label>
+                    <input type="text" id="customerName" placeholder="Örn: Ahmet Usta Ltd." required>
+                </div>
+                <div class="form-group">
+                    <label>📞 Telefon / İletişim</label>
+                    <input type="text" id="customerPhone" placeholder="0555 123 45 67">
+                </div>
+            </div>
+
+            <div class="row-3col">
+                <div class="form-group">
+                    <label>📧 E-Mail Adresi</label>
+                    <input type="email" id="customerEmail" placeholder="ornek@firma.com">
+                </div>
+                <div class="form-group">
+                    <label>🏛️ Vergi Dairesi</label>
+                    <input type="text" id="taxOffice" placeholder="Örn: Kadıköy V.D.">
+                </div>
+                <div class="form-group">
+                    <label>🔢 Vergi Kimlik No</label>
+                    <input type="text" id="taxNumber" placeholder="1234567890">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📝 Adres / Not</label>
+                <textarea id="customerAddress" placeholder="Adres, vergi dairesi vs."></textarea>
+            </div>
+
+            <hr style="margin: 20px 0; border: 1px solid #ecf0f1;">
+
+            <div class="row-2col">
+                <div class="form-group">
+                    <label>📦 Alınan Ürün / Hizmet</label>
+                    <input type="text" id="productName" placeholder="Örn: 50 kg Un" required>
+                </div>
+                <div class="form-group">
+                    <label>💰 Genel Fiyat (₺)</label>
+                    <input type="number" id="productPrice" placeholder="0.00" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🖼️ Fotoğraf Yükle</label>
+                <div class="photo-upload-area" id="photoUploadArea">
+                    <span class="placeholder-text">
+                        <i>📸</i>
+                        <span>Fotoğraf eklemek için tıkla veya sürükle</span>
+                    </span>
+                    <img id="photoPreview" src="#" alt="Yüklenen fotoğraf">
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success" id="saveBtn">✅ Kaydet</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>📂 Kayıtlı İşlemler</h2>
+        <div id="recordsContainer">
+            <div class="empty-message">📭 Yükleniyor...</div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn btn-danger" id="clearAllBtn">🗑️ Tümünü Temizle</button>
+            <button class="btn btn-info" id="exportBtn">📤 JSON Dışa Aktar</button>
+            <button class="btn btn-warning" id="importBtn">📥 JSON İçe Aktar</button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. FIREBASE KONFIGÜRASYONU
+        // ============================================================
+      const firebaseConfig = {
+  apiKey: "AIzaSyCtbF7Mu7-4-Y8jrgQRedwlgJNt9CDYCSw",
+  authDomain: "cari-8ba82.firebaseapp.com",
+  databaseURL: "https://cari-8ba82-default-rtdb.firebaseio.com",
+  projectId: "cari-8ba82",
+  storageBucket: "cari-8ba82.firebasestorage.app",
+  messagingSenderId: "315168987353",
+  appId: "1:315168987353:web:7f8e0fcfcd490edcca86c8"
+};
+
+        // ============================================================
+        // 2. FIREBASE BAŞLAT
+        // ============================================================
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const recordsRef = db.ref('records');
+
+        console.log('✅ Firebase başlatıldı!');
+
+        // ============================================================
+        // 3. DOM ELEMANLARI
+        // ============================================================
+        const form = document.getElementById('customerForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const customerName = document.getElementById('customerName');
+        const customerPhone = document.getElementById('customerPhone');
+        const customerEmail = document.getElementById('customerEmail');
+        const customerAddress = document.getElementById('customerAddress');
+        const taxOffice = document.getElementById('taxOffice');
+        const taxNumber = document.getElementById('taxNumber');
+        const productName = document.getElementById('productName');
+        const productPrice = document.getElementById('productPrice');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoUploadArea = document.getElementById('photoUploadArea');
+        const recordsContainer = document.getElementById('recordsContainer');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFileInput = document.getElementById('importFileInput');
+        const syncStatus = document.getElementById('syncStatus');
+
+        // ============================================================
+        // 4. STATE
+        // ============================================================
+        let records = [];
+        let currentPhotoData = null;
+        let editingRecordId = null;
+
+        // ============================================================
+        // 5. DURUM GÖSTERGESİ
+        // ============================================================
+        function updateSyncStatus(status, message) {
+            syncStatus.className = 'sync-status ' + status;
+            if (status === 'syncing') {
+                syncStatus.innerHTML =
+                    `<span class="loading-spinner"></span> ${message || 'Senkronize ediliyor...'}`;
+            } else if (status === 'online') {
+                syncStatus.innerHTML = `✅ ${message || 'Bağlantı aktif'}`;
+            } else if (status === 'offline') {
+                syncStatus.innerHTML = `⚠️ ${message || 'Çevrimdışı'}`;
+            } else if (status === 'error') {
+                syncStatus.innerHTML = `❌ ${message || 'Bağlantı hatası!'}`;
+            }
+        }
+
+        // ============================================================
+        // 6. YEDEKTEN YÜKLE
+        // ============================================================
+        function loadFromBackup() {
+            const backup = localStorage.getItem('babaRecords_backup');
+            if (backup) {
+                try {
+                    records = JSON.parse(backup);
+                    renderRecords();
+                    console.log('💾 Yedekten yüklendi:', records.length, 'kayıt');
+                    return true;
+                } catch (e) {
+                    records = [];
+                }
+            } else {
+                records = [];
+            }
+            renderRecords();
+            return false;
+        }
+
+        // ============================================================
+        // 7. FIREBASE'DEN VERİ ÇEK
+        // ============================================================
+        function loadFromFirebase() {
+            updateSyncStatus('syncing', 'Veriler yükleniyor...');
+            console.log('📡 Firebase\'den veri çekiliyor...');
+
+            recordsRef.on('value', (snapshot) => {
+                console.log('📥 Firebase verisi geldi!');
+                const data = snapshot.val();
+
+                if (data) {
+                    records = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+
+                    // Tarihe göre sırala (en yeni en üstte)
+                    records.sort((a, b) => {
+                        if (!a.date) return 1;
+                        if (!b.date) return -1;
+                        return new Date(b.date) - new Date(a.date);
+                    });
+
+                    console.log(`📊 ${records.length} kayıt yüklendi`);
+                } else {
+                    records = [];
+                    console.log('📭 Hiç kayıt yok');
+                }
+
+                renderRecords();
+                updateSyncStatus('online', `${records.length} kayıt yüklendi`);
+
+                // Yedekle
+                localStorage.setItem('babaRecords_backup', JSON.stringify(records));
+
+            }, (error) => {
+                console.error('❌ Firebase okuma hatası:', error);
+                updateSyncStatus('error', 'Bağlantı hatası - Yerel veriler gösteriliyor');
+
+                // Yedekten yükle
+                const loaded = loadFromBackup();
+                if (!loaded) {
+                    records = [];
+                    renderRecords();
+                }
+            });
+        }
+
+        // ============================================================
+        // 8. KAYITLARI EKRANA BAS
+        // ============================================================
+        function renderRecords() {
+            if (!records || records.length === 0) {
+                recordsContainer.innerHTML =
+                    `<div class="empty-message">📭 Henüz kayıt yok. İlkini ekleyin!</div>`;
+                return;
+            }
+
+            let html = '';
+            for (let i = 0; i < records.length; i++) {
+                const r = records[i];
+
+                const photoHtml = r.photo ?
+                    `<img src="${r.photo}" alt="Ürün fotoğrafı" class="product-img">` :
+                    '<span style="color:#b0b0b0; font-size:13px;">📷 Fotoğraf yok</span>';
+
+                html += `
+                        <div class="card-item" data-id="${r.id}">
+                            <div class="info">
+                                <div class="field-row"><strong>👤</strong> ${escapeHtml(r.customerName) || 'Belirtilmemiş'}</div>
+                                <div class="field-row"><strong>📞</strong> ${escapeHtml(r.customerPhone) || '-'}</div>
+                                ${r.customerEmail ? `<div class="field-row"><strong>📧</strong> ${escapeHtml(r.customerEmail)}</div>` : ''}
+                                ${r.taxOffice ? `<div class="field-row"><strong>🏛️</strong> ${escapeHtml(r.taxOffice)}</div>` : ''}
+                                ${r.taxNumber ? `<div class="field-row"><strong>🔢</strong> ${escapeHtml(r.taxNumber)}</div>` : ''}
+                                <div class="field-row"><strong>📦</strong> ${escapeHtml(r.productName) || '-'}</div>
+                                <div class="field-row"><strong>💰</strong> ${r.productPrice ? parseFloat(r.productPrice).toFixed(2) + ' ₺' : '-'}</div>
+                                ${r.customerAddress ? `<div class="field-row"><strong>📝</strong> ${escapeHtml(r.customerAddress)}</div>` : ''}
+                                <small style="color:#7f8c8d;">📅 ${r.date || ''}</small>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                                ${photoHtml}
+                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                    <button class="edit-photo-btn" data-id="${r.id}">🖼️ Fotoğraf Ekle/Güncelle</button>
+                                    <button class="delete-btn" data-id="${r.id}">🗑️ Sil</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }
+            recordsContainer.innerHTML = html;
+
+            // Sil butonları
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const record = records.find(r => r.id === id);
+                    if (record && confirm(`"${record.customerName || 'Bu kayıt'}" silinsin mi?`)) {
+                        deleteRecord(id);
+                    }
+                });
+            });
+
+            // Düzenle butonları
+            document.querySelectorAll('.edit-photo-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const record = records.find(r => r.id === id);
+                    if (record) {
+                        editRecord(id);
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // 9. FIREBASE'E KAYDET
+        // ============================================================
+        async function saveToFirebase(recordData, isUpdate = false) {
+            try {
+                if (isUpdate && recordData.id) {
+                    await recordsRef.child(recordData.id).update(recordData);
+                    return recordData.id;
+                } else {
+                    const newRef = recordsRef.push();
+                    const newId = newRef.key;
+                    recordData.id = newId;
+                    await newRef.set(recordData);
+                    return newId;
+                }
+            } catch (error) {
+                console.error('❌ Firebase kayıt hatası:', error);
+                alert('Kayıt sırasında hata oluştu! Lütfen internet bağlantınızı kontrol edin.');
+                return null;
+            }
+        }
+
+        // ============================================================
+        // 10. FIREBASE'DEN SİL
+        // ============================================================
+        async function deleteRecord(id) {
+            try {
+                await recordsRef.child(id).remove();
+                console.log('✅ Kayıt silindi:', id);
+            } catch (error) {
+                console.error('❌ Silme hatası:', error);
+                alert('Silme işlemi başarısız!');
+            }
+        }
+
+        // ============================================================
+        // 11. KAYIT DÜZENLEME
+        // ============================================================
+        function editRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            editingRecordId = id;
+
+            // Formu doldur
+            customerName.value = record.customerName || '';
+            customerPhone.value = record.customerPhone || '';
+            customerEmail.value = record.customerEmail || '';
+            customerAddress.value = record.customerAddress || '';
+            taxOffice.value = record.taxOffice || '';
+            taxNumber.value = record.taxNumber || '';
+            productName.value = record.productName || '';
+            productPrice.value = record.productPrice || '';
+
+            // Fotoğrafı göster
+            if (record.photo) {
+                currentPhotoData = record.photo;
+                photoPreview.src = record.photo;
+                photoPreview.style.display = 'block';
+                const placeholderText = photoUploadArea.querySelector('.placeholder-text');
+                if (placeholderText) placeholderText.style.display = 'none';
+            } else {
+                currentPhotoData = null;
+                photoPreview.style.display = 'none';
+                const placeholderText = photoUploadArea.querySelector('.placeholder-text');
+                if (placeholderText) placeholderText.style.display = 'block';
+            }
+
+            saveBtn.textContent = '🔄 Güncelle';
+            saveBtn.style.background = '#f39c12';
+
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================================================
+        // 12. FORM GÖNDER
+        // ============================================================
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('📝 Form submit edildi');
+
+            // Validasyon
+            const name = customerName.value.trim();
+            const product = productName.value.trim();
+            const price = productPrice.value.trim();
+
+            if (!name) {
+                alert('Lütfen Müşteri Adı girin!');
+                customerName.focus();
+                return;
+            }
+            if (!product) {
+                alert('Lütfen Ürün/Hizmet adı girin!');
+                productName.focus();
+                return;
+            }
+            if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) {
+                alert('Lütfen geçerli bir fiyat girin!');
+                productPrice.focus();
+                return;
+            }
+
+            // Veriyi hazırla
+            const recordData = {
+                customerName: name,
+                customerPhone: customerPhone.value.trim(),
+                customerEmail: customerEmail.value.trim(),
+                customerAddress: customerAddress.value.trim(),
+                taxOffice: taxOffice.value.trim(),
+                taxNumber: taxNumber.value.trim(),
+                productName: product,
+                productPrice: parseFloat(price),
+                photo: currentPhotoData || null,
+                date: new Date().toLocaleString('tr-TR'),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Butonu kilitle
+            saveBtn.disabled = true;
+            saveBtn.textContent = '⏳ Kaydediliyor...';
+
+            let result;
+            if (editingRecordId) {
+                // Güncelleme
+                recordData.id = editingRecordId;
+                result = await saveToFirebase(recordData, true);
+                if (result) {
+                    editingRecordId = null;
+                    saveBtn.textContent = '✅ Güncellendi!';
+                    resetForm();
+                }
+            } else {
+                // Yeni kayıt
+                result = await saveToFirebase(recordData, false);
+                if (result) {
+                    saveBtn.textContent = '✅ Kaydedildi!';
+                    resetForm();
+                }
+            }
+
+            // Butonu eski haline getir
+            setTimeout(() => {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '✅ Kaydet';
+                saveBtn.style.background = '#27ae60';
+            }, 1500);
+        });
+
+        // ============================================================
+        // 13. FORM TEMİZLE
+        // ============================================================
+        function resetForm() {
+            customerName.value = '';
+            customerPhone.value = '';
+            customerEmail.value = '';
+            customerAddress.value = '';
+            taxOffice.value = '';
+            taxNumber.value = '';
+            productName.value = '';
+            productPrice.value = '';
+            currentPhotoData = null;
+            photoPreview.src = '#';
+            photoPreview.style.display = 'none';
+            const placeholderText = photoUploadArea.querySelector('.placeholder-text');
+            if (placeholderText) placeholderText.style.display = 'block';
+            photoInput.value = '';
+            editingRecordId = null;
+            saveBtn.textContent = '✅ Kaydet';
+            saveBtn.style.background = '#27ae60';
+        }
+
+        // ============================================================
+        // 14. FOTOĞRAF YÜKLEME
+        // ============================================================
+        photoUploadArea.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'IMG') {
+                photoInput.click();
+            }
+        });
+
+        photoUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#27ae60';
+            this.style.background = '#eafaf1';
+        });
+
+        photoUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#b0bec5';
+            this.style.background = '#f8fafc';
+        });
+
+        photoUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#b0bec5';
+            this.style.background = '#f8fafc';
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                handleFile(files[0]);
+            }
+        });
+
+        photoInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                handleFile(this.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                currentPhotoData = event.target.result;
+                photoPreview.src = currentPhotoData;
+                photoPreview.style.display = 'block';
+                const placeholderText = photoUploadArea.querySelector('.placeholder-text');
+                if (placeholderText) placeholderText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ============================================================
+        // 15. TÜMÜNÜ TEMİZLE
+        // ============================================================
+        clearAllBtn.addEventListener('click', function() {
+            if (records.length === 0) {
+                alert('Zaten hiç kayıt yok.');
+                return;
+            }
+            if (confirm('Tüm kayıtlar silinecek. Emin misiniz?')) {
+                recordsRef.set(null)
+                    .then(() => {
+                        console.log('✅ Tüm kayıtlar silindi');
+                        records = [];
+                        renderRecords();
+                        updateSyncStatus('online', 'Tüm kayıtlar silindi');
+                    })
+                    .catch((error) => {
+                        console.error('❌ Toplu silme hatası:', error);
+                        alert('Silme işlemi başarısız!');
+                    });
+            }
+        });
+
+        // ============================================================
+        // 16. JSON DIŞA AKTAR
+        // ============================================================
+        exportBtn.addEventListener('click', function() {
+            if (records.length === 0) {
+                alert('Dışa aktarılacak kayıt yok.');
+                return;
+            }
+            const dataStr = JSON.stringify(records, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `baba_cari_kayitlari_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // ============================================================
+        // 17. JSON İÇE AKTAR
+        // ============================================================
+        importBtn.addEventListener('click', function() {
+            importFileInput.click();
+        });
+
+        importFileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    if (Array.isArray(importedData) && importedData.length > 0) {
+                        if (confirm(
+                                `${importedData.length} kayıt içe aktarılacak. Mevcut kayıtların üzerine yazılsın mı?`
+                                )) {
+                            const updates = {};
+                            importedData.forEach(record => {
+                                const id = record.id || recordsRef.push().key;
+                                updates[id] = record;
+                            });
+
+                            recordsRef.set(updates)
+                                .then(() => {
+                                    alert('Kayıtlar başarıyla içe aktarıldı!');
+                                })
+                                .catch((error) => {
+                                    console.error('❌ İçe aktarma hatası:', error);
+                                    alert('İçe aktarma sırasında hata oluştu!');
+                                });
+                        }
+                    } else {
+                        alert('Geçersiz dosya formatı!');
+                    }
+                } catch (error) {
+                    alert('Dosya okunamadı! Lütfen geçerli bir JSON dosyası seçin.');
+                }
+            };
+            reader.readAsText(file);
+            this.value = '';
+        });
+
+        // ============================================================
+        // 18. ESCAPE FONKSİYONU
+        // ============================================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // ============================================================
+        // 19. İNTERNET DURUMU
+        // ============================================================
+        window.addEventListener('online', function() {
+            console.log('🌐 İnternet bağlantısı yeniden sağlandı');
+            updateSyncStatus('syncing', 'Tekrar bağlanıldı, veriler senkronize ediliyor...');
+            loadFromFirebase();
+        });
+
+        window.addEventListener('offline', function() {
+            console.log('📴 İnternet bağlantısı kesildi');
+            updateSyncStatus('offline', 'İnternet bağlantısı kesildi - Yerel veriler gösteriliyor');
+        });
+
+        // ============================================================
+        // 20. BAŞLAT
+        // ============================================================
+        console.log('🚀 Uygulama başlatılıyor...');
+
+        // Önce yedekten yükle (hızlı görüntü için)
+        loadFromBackup();
+
+        // Sonra Firebase'den yükle (gerçek veri)
+        loadFromFirebase();
+
+        console.log('✅ Uygulama hazır!');
+    </script>
+
+</body>
+</html>
