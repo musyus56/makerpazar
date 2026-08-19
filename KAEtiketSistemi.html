@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KA Etiket Sistemi - 4x4 inç Barkodlu Etiket</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+        }
+        
+        body {
+            background-color: #eef2f7;
+            color: #1a2c3e;
+            line-height: 1.5;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c7da0;
+        }
+        
+        h1 {
+            color: #1f5068;
+            font-size: 2rem;
+            letter-spacing: -0.3px;
+        }
+        
+        .badge {
+            background: #2c7da0;
+            color: white;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        
+        .form-section, .preview-section {
+            flex: 1;
+            min-width: 360px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+            transition: all 0.2s;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1f5068;
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #2c3e66;
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background-color: #ffffff;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 4px rgba(44, 125, 160, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background-color: #2c7da0;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .btn:hover {
+            background-color: #1f6392;
+            transform: translateY(-2px);
+        }
+        
+        .btn-print {
+            background-color: #2a9d8f;
+        }
+        .btn-print:hover {
+            background-color: #21867a;
+        }
+        
+        .btn-download {
+            background-color: #e76f51;
+        }
+        .btn-download:hover {
+            background-color: #d45a3a;
+        }
+        
+        .btn-reset {
+            background-color: #6c757d;
+        }
+        .btn-reset:hover {
+            background-color: #545b62;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 24px;
+        }
+        
+        /* 4x4 İNÇ ETİKET (yaklaşık 10x10 cm) -> genişlik 380px değil, artık 4 inç = ~ 370px genişlik, fakat net 4inç görünüm */
+        .label-preview {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            background: white;
+            border-radius: 20px;
+            margin: 0 auto;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.2);
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s;
+        }
+        
+        /* 4x4 inç etiket içeriği - gerçek boyut hissi (genişlik 4inç = 101.6mm ~ 380px) */
+        .label-card {
+            padding: 24px 22px 28px 22px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .label-header {
+            text-align: center;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #cbd5e6;
+        }
+        
+        .label-header h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1f5068;
+            background: #eef2ff;
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 60px;
+            letter-spacing: 1px;
+        }
+        
+        .barcode-area {
+            background: #f8fafc;
+            padding: 20px 16px;
+            margin: 12px 0 18px 0;
+            text-align: center;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .barcode-symbol {
+            font-family: 'Libre Barcode 39', 'Courier New', monospace;
+            font-size: 3rem;
+            font-weight: normal;
+            letter-spacing: 3px;
+            background: white;
+            padding: 12px 8px;
+            border-radius: 16px;
+            word-break: break-all;
+            font-weight: 600;
+        }
+        
+        .barcode-text {
+            font-size: 0.85rem;
+            color: #2c3e50;
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 14px;
+            font-size: 1rem;
+            line-height: 1.4;
+            border-left: 4px solid #2c7da0;
+            padding-left: 14px;
+            align-items: flex-start;
+        }
+        
+        .info-label {
+            font-weight: 800;
+            min-width: 110px;
+            color: #2c3e66;
+            font-size: 0.95rem;
+        }
+        
+        .info-value {
+            color: #0f172a;
+            font-weight: 600;
+            word-break: break-word;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        
+        .note-section {
+            background: #fffbeb;
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            border-left: 6px solid #f4a261;
+        }
+        
+        .note-label {
+            font-weight: 800;
+            color: #b45309;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .note-content {
+            color: #2d3748;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+        
+        .footer-note {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 14px;
+        }
+        
+        .zpl-output {
+            width: 100%;
+            height: 240px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 18px;
+            background-color: #1e2a3a;
+            color: #b9e0f0;
+            border-radius: 20px;
+            margin-top: 24px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 1px solid #334e68;
+        }
+        
+        .info-box {
+            background-color: #e6f3f8;
+            border-left: 6px solid #2c7da0;
+            padding: 20px;
+            border-radius: 24px;
+            margin-top: 28px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #cbd5e1;
+            color: #5a6e7c;
+        }
+        
+        /* YAZDIRMA ALANI - 4x4 inç tam sayfa */
+        #printArea {
+            display: none;
+        }
+        
+        .print-label-card {
+            width: 4in !important;
+            height: auto !important;
+            min-height: 4in !important;
+            padding: 0.2in 0.18in !important;
+            background: white !important;
+            font-family: 'Inter', 'Segoe UI', sans-serif !important;
+            box-sizing: border-box !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            margin: 0 auto !important;
+            border: none !important;
+        }
+        
+        @media print {
+            body * {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            #printArea,
+            #printArea * {
+                display: block !important;
+                visibility: visible !important;
+            }
+            
+            #printArea {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                position: absolute !important;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .print-label-card {
+                display: block !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 4in !important;
+                margin: 0 auto !important;
+            }
+            
+            @page {
+                size: 4in 4in;
+                margin: 0in;
+            }
+            
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 4in;
+                height: 4in;
+            }
+        }
+        
+        @media (max-width: 860px) {
+            .label-preview {
+                max-width: 380px;
+            }
+        }
+        
+        .code-hint {
+            background: #f1f5f9;
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 8px;
+            color: #475569;
+        }
+        
+        .dimension-badge {
+            background: #2c7da0;
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 20px;
+            padding: 2px 12px;
+            display: inline-block;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📦 KA Etiket Sistemi <span class="dimension-badge">4x4 inç (10x10 cm)</span></h1>
+        <p class="badge">Kod • İsim Soyisim • Not Bölümü • Barkodlu Etiket</p>
+        <p style="margin-top: 10px; color: #4a627a;">Zebra yazıcı uyumlu | 4x4 inç termal etiket (101.6x101.6 mm)</p>
+    </header>
+    
+    <div class="container">
+        <section class="form-section">
+            <h2 class="section-title">✏️ Bilgi Girişi</h2>
+            <form id="labelForm">
+                <div class="form-group">
+                    <label for="kaCode">📟 KA Kodu (Barkod)</label>
+                    <input type="text" id="kaCode" placeholder="Örn: KA-2025-0042 / ABC123" value="KA-2412-088">
+                    <div class="code-hint">Bu kod barkod olarak etikete basılır (Code 39)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">👤 İsim Soyisim</label>
+                    <input type="text" id="fullName" placeholder="Müşteri / Teknik personel" value="Zeynep Kaya">
+                </div>
+                
+                <div class="form-group">
+                    <label for="note">📝 Not Bölümü (Servis Notu)</label>
+                    <textarea id="note" placeholder="Arıza detayı, yapılacak işlemler, parça bilgisi vb...">Batarya değişimi ve şarj portu temizliği yapılacak. Cihaz garanti kapsamında değil.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="extraInfo">🔧 Ek Bilgi (Opsiyonel)</label>
+                    <input type="text" id="extraInfo" placeholder="Telefon / Model / Seri No" value="Model: P50 Pro, İMEI: 352112345678901">
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" id="generateBtn" class="btn">✨ Etiketi Oluştur</button>
+                    <button type="button" id="resetBtn" class="btn btn-reset">🗑️ Temizle</button>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" id="printBtn" class="btn btn-print">🖨️ Yazdır (4x4 inç)</button>
+                    <button type="button" id="downloadBtn" class="btn btn-download">📥 ZPL İndir</button>
+                </div>
+            </form>
+            
+            <div class="info-box">
+                <h4 style="margin-bottom: 10px;">📌 4x4 inç Etiket Özellikleri</h4>
+                <ul style="margin-left: 20px; font-size: 0.9rem;">
+                    <li><strong>KA Kodu</strong> → Barkod (Code 39) olarak basılır</li>
+                    <li><strong>İsim Soyisim</strong> → Müşteri / yetkili adı</li>
+                    <li><strong>Not alanı</strong> → Servis notları, arıza açıklaması</li>
+                    <li>Zebra yazıcılar için optimize ZPL kodu (4x4 inç = 4in x 4in)</li>
+                    <li>Yazdır butonu tam 4x4 inç kağıda uygun</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="preview-section">
+            <h2 class="section-title">🏷️ Etiket Önizleme (4x4 inç)</h2>
+            <div class="label-preview" id="labelPreview">
+                <div class="label-card" id="labelCard">
+                    <div class="label-header">
+                        <h3>KA SERVİS</h3>
+                    </div>
+                    <div class="barcode-area">
+                        <div class="barcode-symbol" id="barcodeSymbol">*KA-2412-088*</div>
+                        <div class="barcode-text" id="barcodeText">KA-2412-088</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">İsim Soyisim</div>
+                        <div class="info-value" id="previewName">Zeynep Kaya</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Ek Bilgi</div>
+                        <div class="info-value" id="previewExtra">Model: P50 Pro, IMEI: 352112345678901</div>
+                    </div>
+                    <div class="note-section">
+                        <div class="note-label">📋 SERVİS NOTU</div>
+                        <div class="note-content" id="previewNote">Batarya değişimi ve şarj portu temizliği yapılacak. Cihaz garanti kapsamında değil.</div>
+                    </div>
+                    <div class="footer-note">
+                        KA Barkotlu • 4x4 inç
+                    </div>
+                </div>
+            </div>
+            <p style="text-align:center; font-size:0.75rem; margin-top:12px;">⭐ Barkod = KA Kodu (Code 39) • 4x4 inç etiket boyutu</p>
+            
+            <h3 class="section-title" style="margin-top: 20px;">📟 ZPL Kodu (Zebra 4x4 inç)</h3>
+            <div class="zpl-output" id="zplOutput">
+                ^XA
+                ^LL400
+                ^FO30,20^A0N,38,45^FDKA SERVİS^FS
+                ^FO30,80^BY3^B3N,N,70,Y,N^FD*KA-2412-088*^FS
+                ^FO30,180^A0N,28,32^FDİsim: Zeynep Kaya^FS
+                ^FO30,225^A0N,24,28^FDModel: P50 Pro^FS
+                ^FO30,270^A0N,22,26^FDNot: Batarya değişimi^FS
+                ^XZ
+            </div>
+        </section>
+    </div>
+    
+    <!-- YAZDIRMA ALANI - GİZLİ (4x4 inç) -->
+    <div id="printArea">
+        <div class="print-label-card" id="printLabelCard"></div>
+    </div>
+    
+    <footer>
+        <p>🔧 KA Etiket Sistemi | 4x4 inç (101.6x101.6 mm) | Barkod + İsim Soyisim + Not Alanı | Zebra Uyumlu ZPL</p>
+    </footer>
+    
+    <script>
+        (function() {
+            // DOM Elemanları
+            const kaCodeInput = document.getElementById('kaCode');
+            const fullNameInput = document.getElementById('fullName');
+            const noteInput = document.getElementById('note');
+            const extraInfoInput = document.getElementById('extraInfo');
+            
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const printBtn = document.getElementById('printBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            const barcodeSymbol = document.getElementById('barcodeSymbol');
+            const barcodeText = document.getElementById('barcodeText');
+            const previewName = document.getElementById('previewName');
+            const previewExtra = document.getElementById('previewExtra');
+            const previewNote = document.getElementById('previewNote');
+            const zplOutput = document.getElementById('zplOutput');
+            const printLabelCard = document.getElementById('printLabelCard');
+            
+            // Barkod formatı (yıldız sarma)
+            function formatBarcode(rawCode) {
+                if (!rawCode) return '*EMPTY*';
+                let code = rawCode.trim();
+                if (code === '') return '*KOD*';
+                if (!code.startsWith('*')) code = '*' + code;
+                if (!code.endsWith('*')) code = code + '*';
+                return code;
+            }
+            
+            function cleanBarcodeText(rawCode) {
+                if (!rawCode) return '';
+                let cleaned = rawCode.trim();
+                cleaned = cleaned.replace(/^\*+/, '').replace(/\*+$/, '');
+                return cleaned || 'KOD';
+            }
+            
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
+            }
+            
+            // ZPL için kısaltma (4x4 inç etikete sığdır)
+            function truncateForZpl(text, maxLen) {
+                if (!text) return "";
+                let str = text.replace(/[\x00-\x1F\x7F]/g, ' ');
+                if (str.length <= maxLen) return str;
+                return str.substring(0, maxLen-2) + "..";
+            }
+            
+            // Etiket Güncelleme (Önizleme + ZPL + Yazdırma HTML)
+            function updateLabel() {
+                let kaCode = kaCodeInput.value.trim();
+                if (kaCode === "") kaCode = "KA000000";
+                const fullName = fullNameInput.value.trim() || "İsim belirtilmemiş";
+                const note = noteInput.value.trim() || "Not eklenmedi.";
+                const extraInfo = extraInfoInput.value.trim() || "";
+                
+                const barcodeStarred = formatBarcode(kaCode);
+                const cleanCode = cleanBarcodeText(kaCode);
+                
+                // Görsel güncelle
+                barcodeSymbol.textContent = barcodeStarred;
+                barcodeText.textContent = cleanCode;
+                previewName.textContent = fullName;
+                previewExtra.textContent = extraInfo || "—";
+                previewNote.textContent = note;
+                
+                // 4x4 inç için yazdırma HTML (genişlik tam 4inç)
+                const printHTML = `
+                    <div style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; width: 100%; height: auto; background: white; box-sizing: border-box;">
+                        <div style="padding: 0.15in 0.18in; display: flex; flex-direction: column;">
+                            <div style="text-align: center; margin-bottom: 12px; border-bottom: 2px dashed #ccc; padding-bottom: 6px;">
+                                <h3 style="font-size: 1.5rem; font-weight: 800; color:#1f5068; background:#eef2ff; display:inline-block; padding:4px 20px; border-radius: 40px;">KA SERVİS</h3>
+                            </div>
+                            <div style="background:#f8fafc; padding: 12px; text-align:center; border-radius: 18px; border:1px solid #e2e8f0; margin: 8px 0 12px 0;">
+                                <div style="font-family: 'Courier New', monospace; font-size: 2.6rem; letter-spacing: 2px; background:white; padding:8px; border-radius:14px; font-weight:bold;">${escapeHtml(barcodeStarred)}</div>
+                                <div style="font-size:0.75rem; color:#2c3e50; margin-top:6px;">${escapeHtml(cleanCode)}</div>
+                            </div>
+                            <div style="display:flex; margin-bottom: 10px; border-left:3px solid #2c7da0; padding-left:12px;">
+                                <div style="font-weight:800; min-width:100px; color:#2c3e66;">İsim Soyisim</div>
+                                <div style="font-weight:600;">${escapeHtml(fullName)}</div>
+                            </div>
+                            ${extraInfo ? `
+                            <div style="display:flex; margin-bottom: 10px; border-left:3px solid #2c7da0; padding-left:12px;">
+                                <div style="font-weight:800; min-width:100px; color:#2c3e66;">Ek Bilgi</div>
+                                <div style="font-weight:500;">${escapeHtml(extraInfo)}</div>
+                            </div>` : ''}
+                            <div style="background:#fffbeb; margin-top: 10px; padding: 12px; border-radius: 20px; border-left: 5px solid #f4a261;">
+                                <div style="font-weight:800; color:#b45309; font-size:0.7rem; text-transform:uppercase;">📋 SERVİS NOTU</div>
+                                <div style="color:#2d3748; white-space:pre-wrap; font-size:0.85rem; line-height:1.4;">${escapeHtml(note)}</div>
+                            </div>
+                            <div style="margin-top: 14px; text-align:center; font-size:0.6rem; color:#6c757d; border-top:1px solid #ecf0f1; padding-top:8px;">
+                                KA Barkotlu • 4x4 inç
+                            </div>
+                        </div>
+                    </div>
+                `;
+                printLabelCard.innerHTML = printHTML;
+                
+                // ****** ZPL Kodu (4x4 inç için optimize) ******
+                // LL = 400 (4 inç yaklaşık 1016 nokta, 203 DPI için 4*203=812 ama esnek, 400 nokta yeterli)
+                let zpl = `^XA\n`;
+                zpl += `^LL420\n`; // 4 inç yükseklik
+                zpl += `^FO30,20^A0N,45,50^FDKA SERVİS^FS\n`;
+                // Barkod Code 39
+                let barcodeField = cleanBarcodeText(kaCode);
+                let barcodeStarredZpl = (!barcodeField.startsWith("*") ? "*" : "") + barcodeField + (!barcodeField.endsWith("*") ? "*" : "");
+                zpl += `^FO30,80^BY3^B3N,N,70,Y,N^FD${barcodeStarredZpl}^FS\n`;
+                // İsim Soyisim
+                let nameLine = `İsim: ${truncateForZpl(fullName, 32)}`;
+                zpl += `^FO30,180^A0N,30,35^FD${nameLine}^FS\n`;
+                // Ek bilgi
+                if (extraInfo && extraInfo.trim() !== "") {
+                    let extraLine = `${truncateForZpl(extraInfo, 38)}`;
+                    zpl += `^FO30,230^A0N,24,28^FD${extraLine}^FS\n`;
+                    // Not satırı
+                    let noteLine = `Not: ${truncateForZpl(note, 42)}`;
+                    zpl += `^FO30,285^A0N,22,26^FD${noteLine}^FS\n`;
+                } else {
+                    let noteLine = `Not: ${truncateForZpl(note, 46)}`;
+                    zpl += `^FO30,230^A0N,24,28^FD${noteLine}^FS\n`;
+                }
+                zpl += `^XZ`;
+                zplOutput.textContent = zpl;
+            }
+            
+            function resetForm() {
+                kaCodeInput.value = 'KA-000000';
+                fullNameInput.value = '';
+                noteInput.value = '';
+                extraInfoInput.value = '';
+                fullNameInput.value = 'Müşteri Adı';
+                noteInput.value = 'Servis notu girilecek...';
+                extraInfoInput.value = 'Telefon / Model';
+                updateLabel();
+            }
+            
+            function downloadZPL() {
+                let zplContent = zplOutput.textContent;
+                if (!zplContent || zplContent.includes("^XA") === false) {
+                    updateLabel();
+                    zplContent = zplOutput.textContent;
+                }
+                const blob = new Blob([zplContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                let codeVal = cleanBarcodeText(kaCodeInput.value) || "ka_etiketi";
+                const fileName = `KA_4x4_${codeVal}.zpl`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            function printLabel() {
+                updateLabel();
+                setTimeout(() => {
+                    window.print();
+                }, 120);
+            }
+            
+            // Olay dinleyiciler
+            generateBtn.addEventListener('click', updateLabel);
+            resetBtn.addEventListener('click', resetForm);
+            printBtn.addEventListener('click', printLabel);
+            downloadBtn.addEventListener('click', downloadZPL);
+            
+            kaCodeInput.addEventListener('input', updateLabel);
+            fullNameInput.addEventListener('input', updateLabel);
+            noteInput.addEventListener('input', updateLabel);
+            extraInfoInput.addEventListener('input', updateLabel);
+            
+            // Demo başlangıç değerleri
+            if (kaCodeInput.value === '') kaCodeInput.value = 'KA-2412-088';
+            if (fullNameInput.value === '') fullNameInput.value = 'Zeynep Kaya';
+            if (noteInput.value === '') noteInput.value = 'Batarya değişimi ve şarj portu temizliği yapılacak.';
+            if (extraInfoInput.value === '') extraInfoInput.value = 'Model: P50 Pro, İMEI: 352112345678901';
+            updateLabel();
+        })();
+    </script>
+</body>
+</html>
